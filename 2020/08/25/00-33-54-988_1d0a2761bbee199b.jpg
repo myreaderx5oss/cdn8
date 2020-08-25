@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="ja" xmlns:og="http://ogp.me/ns#" id="pjaxArea">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-PXZZWR4');</script>
+  <!-- End Google Tag Manager -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1" />
+<link rel="stylesheet" type="text/css" href="https://ainow.ai/wp-content/themes/ainow/css/main.css?0" />
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/8728b38726.js" crossorigin="anonymous"></script>
+<script src="https://sdk.form.run/js/v2/formrun.js"></script>
+<title>【AIセキュリティ超入門】第2話 – AIを騙す攻撃 – 敵対的サンプル | AI専門ニュースメディア AINOW</title>
+
+<!-- All in One SEO Pack 3.1.1 by Michael Torbert of Semper Fi Web Designob_start_detected [-1,-1] -->
+<meta name="description"  content="※この記事は、株式会社ChillStackと三井物産セキュアディレクション株式会社セキュアAI研究所による寄稿です。 本コラムは「AIセキュリティ超入門」と題し、AIセキュリティに関する話題を幅広く・分かり易く取り上げ、連載形式でお伝えしていきます。" />
+
+<link rel="canonical" href="https://jpsec.ai/columns/beginner/2nd.html" />
+<meta property="og:title" content="【AIセキュリティ超入門】第2話 – AIを騙す攻撃 – 敵対的サンプル | AI専門ニュースメディア AINOW" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ainow.ai/2020/08/24/227047/" />
+<meta property="og:image" content="https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a.jpg" />
+<meta property="og:site_name" content="AINOW" />
+<meta property="fb:admins" content="491682187693593" />
+<meta property="og:description" content="※この記事は、株式会社ChillStackと三井物産セキュアディレクション株式会社セキュアAI研究所による寄稿です。 本コラムは「AIセキュリティ超入門」と題し、AIセキュリティに関する話題を幅広く・分かり易く取り上げ、連載形式でお伝えしていきます。" />
+<meta property="article:tag" content="ainow編集部" />
+<meta property="article:publisher" content="https://www.facebook.com/dipainow/" />
+<meta property="article:published_time" content="2020-08-23T22:00:23Z" />
+<meta property="article:modified_time" content="2020-08-24T02:11:52Z" />
+<meta property="og:image:secure_url" content="https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="【AIセキュリティ超入門】第2話 – AIを騙す攻撃 – 敵対的サンプル | AI専門ニュースメディア AINOW" />
+<meta name="twitter:description" content="※この記事は、株式会社ChillStackと三井物産セキュアディレクション株式会社セキュアAI研究所による寄稿です。 本コラムは「AIセキュリティ超入門」と題し、AIセキュリティに関する話題を幅広く・分かり易く取り上げ、連載形式でお伝えしていきます。" />
+<meta name="twitter:image" content="https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a.jpg" />
+<!-- All in One SEO Pack -->
+<link rel='dns-prefetch' href='//ainow.ai' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/ainow.ai\/wp-includes\/js\/wp-emoji-release.min.js"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),!(j.toDataURL().length<3e3)&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,65039,8205,55356,57096),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,55356,57096),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55357,56425,55356,57341,8205,55357,56507),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55357,56425,55356,57341,55357,56507),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='celtispack-style-css'  href='https://ainow.ai/wp-content/plugins/celtispack/css/celtispack-style.css' type='text/css' media='all' />
+<link rel='stylesheet' id='avatar-manager-css'  href='https://ainow.ai/wp-content/plugins/avatar-manager/assets/css/avatar-manager.min.css' type='text/css' media='all' />
+<link rel='stylesheet' id='contact-form-7-css'  href='https://ainow.ai/wp-content/plugins/contact-form-7/includes/css/styles.css' type='text/css' media='all' />
+<link rel='stylesheet' id='pz-linkcard-css'  href='//ainow.ai/wp-content/uploads/pz-linkcard/style.css' type='text/css' media='all' />
+<link rel='stylesheet' id='stock-ticker-css'  href='https://ainow.ai/wp-content/plugins/stock-ticker/assets/css/stock-ticker.css' type='text/css' media='all' />
+<link rel='stylesheet' id='stock-ticker-custom-css'  href='https://ainow.ai/wp-content/uploads/stock-ticker-custom.css' type='text/css' media='all' />
+<link rel='stylesheet' id='toc-screen-css'  href='https://ainow.ai/wp-content/plugins/table-of-contents-plus/screen.min.css' type='text/css' media='all' />
+<link rel='stylesheet' id='awsm-jobs-general-css'  href='https://ainow.ai/wp-content/plugins/wp-job-openings/assets/css/general.min.css' type='text/css' media='all' />
+<link rel='stylesheet' id='awsm-jobs-style-css'  href='https://ainow.ai/wp-content/plugins/wp-job-openings/assets/css/style.min.css' type='text/css' media='all' />
+<link rel='stylesheet' id='amazon-auto-links-./wp-content/plugins/amazon-auto-links/template/list-css'  href='https://ainow.ai/wp-content/plugins/amazon-auto-links/template/list/style.css' type='text/css' media='all' />
+<link rel='stylesheet' id='style-name-css'  href='https://ainow.ai/wp-content/themes/ainow/css/main.css' type='text/css' media='all' />
+<link rel='stylesheet' id='amazonjs-css'  href='https://ainow.ai/wp-content/plugins/amazonjs/css/amazonjs.css' type='text/css' media='all' />
+<link rel='stylesheet' id='tooltip-css'  href='https://ainow.ai/wp-content/plugins/enhanced-tooltipglossary/frontend/assets/css/tooltip.css' type='text/css' media='all' />
+<script type='text/javascript' src='https://ainow.ai/wp-includes/js/jquery/jquery.js'></script>
+<script type='text/javascript' src='https://ainow.ai/wp-includes/js/jquery/jquery-migrate.min.js'></script>
+<script type='text/javascript' src='https://ainow.ai/wp-content/plugins/wp-google-analytics-events/js/ga-scroll-events.js'></script>
+<script type='text/javascript' src='https://ainow.ai/wp-content/plugins/avatar-manager/assets/js/avatar-manager.min.js'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var cmtt_data = {"tooltip":{"clickable":0,"top":3,"left":23,"endalpha":95,"borderStyle":"none","borderWidth":"0px","borderColor":"#000","fontSize":"13px","padding":"2px 12px 3px 7px","borderRadius":"6px"},"ajaxurl":"https:\/\/ainow.ai\/wp-admin\/admin-ajax.php"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://ainow.ai/wp-content/plugins/enhanced-tooltipglossary/frontend/assets/js/tooltip.js'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var wpp_params = {"sampling_active":"1","sampling_rate":"100","ajax_url":"https:\/\/ainow.ai\/wp-json\/wordpress-popular-posts\/v1\/popular-posts\/","ID":"227047","token":"6d360adac4","debug":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://ainow.ai/wp-content/plugins/wordpress-popular-posts/public/js/wpp-4.2.0.min.js'></script>
+<link rel='https://api.w.org/' href='https://ainow.ai/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://ainow.ai/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://ainow.ai/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='1位は点字自動翻訳システム！評価額は5億円！「DCON2020」速報' href='https://ainow.ai/2020/08/22/227464/' />
+<link rel='next' title='Telexistenceの技術顧問に松尾豊氏が就任 ー生活領域に近い場所でロボットを普及' href='https://ainow.ai/2020/08/24/227475/' />
+<meta name="generator" content="WordPress 4.7.17" />
+<link rel='shortlink' href='https://ainow.ai/?p=227047' />
+<link rel="alternate" type="application/json+oembed" href="https://ainow.ai/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fainow.ai%2F2020%2F08%2F24%2F227047%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://ainow.ai/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fainow.ai%2F2020%2F08%2F24%2F227047%2F&#038;format=xml" />
+<meta name="robots" content="index,follow" /><style type="text/css">
+.post-last-modified, .page-last-modified {
+color: #808080;
+font-weight: bold; 
+font-size: small; 
+}
+</style>
+<style type='text/css' id='amazon-auto-links-button-css'>.amazon-auto-links-button.amazon-auto-links-button-default {background: #4997e5;background-image: -webkit-linear-gradient(top, #4997e5, #3f89ba);background-image: -moz-linear-gradient(top, #4997e5, #3f89ba);background-image: -ms-linear-gradient(top, #4997e5, #3f89ba);background-image: -o-linear-gradient(top, #4997e5, #3f89ba);background-image: linear-gradient(to bottom, #4997e5, #3f89ba);-webkit-border-radius: 4;-moz-border-radius: 4;border-radius: 4px;margin-left: auto;margin-right: auto;text-align: center;white-space: nowrap;color: #ffffff;font-size: 13px;text-shadow-color: transparent;width: 100px;box-shadow-color: #666666;padding: 7px 8px 8px 8px;background: #3498db;border: solid #6891a5 1px;text-decoration: none;}.amazon-auto-links-button.amazon-auto-links-button-default:hover {background: #3cb0fd;background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);background-image: -o-linear-gradient(top, #3cb0fd, #3498db);background-image: linear-gradient(to bottom, #3cb0fd, #3498db);text-decoration: none;}.amazon-auto-links-button.amazon-auto-links-button-default > a {color: inherit; border-bottom: none;text-decoration: none;}.amazon-auto-links-button.amazon-auto-links-button-default > a:hover {color: inherit;}.amazon-auto-links-button.amazon-auto-links-button-192994 {background: #4997e5;background-image: -webkit-linear-gradient(top, #4997e5, #3f89ba);background-image: -moz-linear-gradient(top, #4997e5, #3f89ba);background-image: -ms-linear-gradient(top, #4997e5, #3f89ba);background-image: -o-linear-gradient(top, #4997e5, #3f89ba);background-image: linear-gradient(to bottom, #4997e5, #3f89ba);-webkit-border-radius: 4;-moz-border-radius: 4;border-radius: 4px;margin-left: auto;margin-right: auto;text-align: center;white-space: nowrap;color: #ffffff;font-size: 13px;text-shadow-color: transparent;width: 100px;box-shadow-color: #666666;padding: 7px 8px 8px 8px;background: #3498db;border: solid #6891a5 1px;text-decoration: none;}.amazon-auto-links-button.amazon-auto-links-button-192994:hover {background: #3cb0fd;background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);background-image: -o-linear-gradient(top, #3cb0fd, #3498db);background-image: linear-gradient(to bottom, #3cb0fd, #3498db);text-decoration: none;}.amazon-auto-links-button.amazon-auto-links-button-192994 > a {color: inherit; border-bottom: none;text-decoration: none;}.amazon-auto-links-button.amazon-auto-links-button-192994 > a:hover {color: inherit;}</style><style type="text/css" id="syntaxhighlighteranchor"></style>
+<link rel="icon" href="https://ainow.ai/wp-content/uploads/2020/05/cropped-ainow_vertical_1-1-32x32.png" sizes="32x32" />
+<link rel="icon" href="https://ainow.ai/wp-content/uploads/2020/05/cropped-ainow_vertical_1-1-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon-precomposed" href="https://ainow.ai/wp-content/uploads/2020/05/cropped-ainow_vertical_1-1-180x180.png" />
+<meta name="msapplication-TileImage" content="https://ainow.ai/wp-content/uploads/2020/05/cropped-ainow_vertical_1-1-270x270.png" />
+
+<!-- BEGIN ExactMetrics v5.3.8 Universal Analytics - https://exactmetrics.com/ -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-79023068-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- END ExactMetrics Universal Analytics -->
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PXZZWR4"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<!-- wrapper -->
+<div id="wrapper">
+<!-- header -->
+
+<header>
+<input type="checkbox" id="cp_toggle">
+<div class="cp_mobilebar">
+    <div class="sp_header_logo">
+      <a href="/"><img src="https://ainow.ai/wp-content/themes/ainow/img/sp_logo.png" alt=""></a>
+    </div>
+  <a class="sp_tag_button sp" href="/tag/">#タグから探す</a>
+  <label for="cp_toggle" class="cp_menuicon">
+    <span></span>
+  </label>
+</div>
+<div class="cp_offcm_back sp">
+</div>
+<div class="cp_offcm">
+    <div class="header_logo pc">
+      <a href="/"><img src="https://ainow.ai/wp-content/themes/ainow/img/logo.png" alt=""></a>
+    </div>
+  <nav>
+      <a class="tag_button pc" href="/tag/">#タグから探す</a>
+      <div class="search_area">
+      <form method="get" class="searchform" action="https://ainow.ai/">
+  <input type="text" placeholder="記事を検索" name="s" class="searchfield" value="" />
+</form>
+      </div>
+      <ul id="menu-%e3%83%a1%e3%82%a4%e3%83%b3%e3%83%a1%e3%83%8b%e3%83%a5%e3%83%bc" class="menu"><li id="menu-item-113468" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-113468"><a href="https://ainow.ai/">TOP</a></li>
+<li id="menu-item-114747" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-114747"><a href="https://ainow.ai/what-ainow/">AINOWとは</a></li>
+<li id="menu-item-168662" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-has-children menu-item-168662"><a href="https://ainow.ai/category/ainoweditor/">編集部記事</a>
+<ul class="sub-menu">
+	<li id="menu-item-169633" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-169633"><a href="https://ainow.ai/category/ainoweditor/ai-news/">注目のニュース</a></li>
+	<li id="menu-item-169496" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-169496"><a href="https://ainow.ai/category/ainoweditor/event/">イベント</a></li>
+	<li id="menu-item-113466" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-113466"><a href="https://ainow.ai/category/ainoweditor/interview/">インタビュー</a></li>
+	<li id="menu-item-134024" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-134024"><a href="https://ainow.ai/category/ainoweditor/column/">コラム</a></li>
+	<li id="menu-item-137044" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-137044"><a href="https://ainow.ai/category/foreign-trend">海外トレンド</a></li>
+</ul>
+</li>
+<li id="menu-item-134028" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-134028"><a href="https://ainow.ai/accelerator/">AI.Accelerator</a>
+<ul class="sub-menu">
+	<li id="menu-item-134025" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-134025"><a href="https://ainow.ai/category/ainoweditor/ai-accelerator/">AI.Accelerator記事</a></li>
+</ul>
+</li>
+<li id="menu-item-154333" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-154333"><a href="https://form.run/@ainow-contact">お問い合わせ</a></li>
+</ul>  </nav>
+</div>
+</header>
+  <!-- contents -->
+  <div class="contents">
+    <div class="article_wrapper">
+      <div class="article_contents">
+        <div class="article_area">
+            <div class="article_manager">
+    <span><a href="/">HOME</a>/
+      <a href="https://ainow.ai/category/ainoweditor/">AINOW編集部</a>      /【AIセキュリティ超入門】第2話 &#8211; AIを騙す攻撃 &#8211; 敵対的サンプル</span>
+  </div>
+          <div id="addbanner-titletop">
+      <div id="text-17" class="widget widget_text">			<div class="textwidget"><a href="https://form.run/@ainowmagazine3" target="_blank"><img src="https://ainow.ai/wp-content/uploads/2017/05/20170529_738_01.png"></a></div>
+		</div>    </div>
+      <div class="article_area_data">
+      <span class="article_area_date">2020.08.24</span>
+</div>
+  <h1 class="article_main_title">【AIセキュリティ超入門】第2話 &#8211; AIを騙す攻撃 &#8211; 敵対的サンプル</h1>
+  <div class="button-area">
+  <ul>
+    <!--Twitter-->
+    <li class="twitter">
+      <a href="https://twitter.com/intent/tweet?text=%E3%80%90AI%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E8%B6%85%E5%85%A5%E9%96%80%E3%80%91%E7%AC%AC2%E8%A9%B1+%26%238211%3B+AI%E3%82%92%E9%A8%99%E3%81%99%E6%94%BB%E6%92%83+%26%238211%3B+%E6%95%B5%E5%AF%BE%E7%9A%84%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB&amp;url=https%3A%2F%2Fainow.ai%2F2020%2F08%2F24%2F227047%2F"
+      target="_blank" title="Twitterで共有">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <!--FaceBook-->
+    <li class="facebook">
+      <a href="https://www.facebook.com/sharer.php?src=bm&u=https%3A%2F%2Fainow.ai%2F2020%2F08%2F24%2F227047%2F&t=%E3%80%90AI%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E8%B6%85%E5%85%A5%E9%96%80%E3%80%91%E7%AC%AC2%E8%A9%B1+%26%238211%3B+AI%E3%82%92%E9%A8%99%E3%81%99%E6%94%BB%E6%92%83+%26%238211%3B+%E6%95%B5%E5%AF%BE%E7%9A%84%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB"
+      target="_blank" title="Facebookで共有">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <!--はてなブックマーク-->
+    <li class="hatena">
+      <a href="https://b.hatena.ne.jp/add?mode=confirm&amp;url=https%3A%2F%2Fainow.ai%2F2020%2F08%2F24%2F227047%2F&amp;title=%E3%80%90AI%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E8%B6%85%E5%85%A5%E9%96%80%E3%80%91%E7%AC%AC2%E8%A9%B1+%26%238211%3B+AI%E3%82%92%E9%A8%99%E3%81%99%E6%94%BB%E6%92%83+%26%238211%3B+%E6%95%B5%E5%AF%BE%E7%9A%84%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB"
+      target="_blank" title="はてなブックマークに追加">
+        <i class="fa fa-hatena"></i>
+      </a>
+    </li>
+    <!--Poket-->
+    <li class="rss">
+      <a href="https://feedly.com/i/subscription/feed%2Fhttp%3A%2F%2Fainow.ai%2Ffeed%2F"
+      target="_blank" title="RSS購読">
+        <i class="fas fa-rss"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+  <div class="entry-content">
+    <p class="post-last-modified">&#26368;&#32066;&#26356;&#26032;&#26085;&#65306; <time class="post-last-modified-td">2020&#24180;8&#26376;24&#26085;</time></p><img class="aligncenter size-full wp-image-227093" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a.jpg" alt="" width="1200" height="630" data-srcset="https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a.jpg 1200w, https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-150x79.jpg 150w, https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-300x158.jpg 300w, https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-768x403.jpg 768w, https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-572x300.jpg 572w" data-sizes="(max-width: 1200px) 100vw, 1200px"/><p>&#8251;&#12371;&#12398;&#35352;&#20107;&#12399;&#12289;&#26666;&#24335;&#20250;&#31038;ChillStack&#12392;&#19977;&#20117;&#29289;&#29987;&#12475;&#12461;&#12517;&#12450;&#12487;&#12451;&#12524;&#12463;&#12471;&#12519;&#12531;&#26666;&#24335;&#20250;&#31038;&#12475;&#12461;&#12517;&#12450;AI&#30740;&#31350;&#25152;&#12395;&#12424;&#12427;&#23492;&#31295;&#12391;&#12377;&#12290;</p>
+<p>&#26412;&#12467;&#12521;&#12512;&#12399;&#12300;<strong>AI&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#36229;&#20837;&#38272;</strong>&#12301;&#12392;&#38988;&#12375;&#12289;AI&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#12395;&#38306;&#12377;&#12427;&#35441;&#38988;&#12434;&#24133;&#24195;&#12367;&#12539;&#20998;&#12363;&#12426;&#26131;&#12367;&#21462;&#12426;&#19978;&#12370;&#12289;&#36899;&#36617;&#24418;&#24335;&#12391;&#12362;&#20253;&#12360;&#12375;&#12390;&#12356;&#12365;&#12414;&#12377;&#12290;</p>
+<p>&#12394;&#12362;&#12289;<strong>&#26412;&#12467;&#12521;&#12512;&#12391;&#12399;&#12289;&#21336;&#12395;AI&#12395;&#23550;&#12377;&#12427;&#25915;&#25731;&#25163;&#27861;&#12420;&#24819;&#23450;&#12373;&#12428;&#12427;&#12522;&#12473;&#12463;&#12398;&#12415;&#12434;&#21462;&#12426;&#19978;&#12370;&#12427;&#12398;&#12391;&#12399;&#12394;&#12367;&#12289;AI&#12434;&#25915;&#25731;&#12363;&#12425;&#23432;&#12427;&#26041;&#27861;&#12420;&#27671;&#12434;&#20184;&#12369;&#12427;&#12409;&#12365;AI&#38283;&#30330;&#12398;&#12509;&#12452;&#12531;&#12488;&#12394;&#12393;&#12418;&#21462;&#12426;&#19978;&#12370;&#12390;&#12356;&#12365;&#12414;&#12377;&#12290;</strong></p>
+<p><strong>AI&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#36229;&#20837;&#38272;&#12398;&#12467;&#12521;&#12512;&#19968;&#35239;</strong></p>
+<p>&#8251;&#26412;&#12467;&#12521;&#12512;&#12399;&#20840;8&#22238;&#12398;&#36899;&#36617;&#24418;&#24335;&#12395;&#12394;&#12387;&#12390;&#12356;&#12414;&#12377;&#12290; &#20170;&#24460;&#12289;&#20197;&#19979;&#12398;&#12479;&#12452;&#12488;&#12523;&#12391;&#38918;&#27425;&#25522;&#36617;&#12375;&#12390;&#12356;&#12367;&#20104;&#23450;*1&#12391;&#12377;&#12290;</p>
+<ul><li><strong>&#31532;&#65297;&#22238;&#65306;&#12452;&#12531;&#12488;&#12525;&#12480;&#12463;&#12471;&#12519;&#12531;</strong></li>
+<li><strong>&#31532;&#65298;&#22238;&#65306;AI&#12434;&#39449;&#12377;&#25915;&#25731; &ndash; &#25973;&#23550;&#30340;&#12469;&#12531;&#12503;&#12523; &ndash;</strong></li>
+<li><strong>&#31532;&#65299;&#22238;&#65306;AI&#12434;&#20055;&#12387;&#21462;&#12427;&#25915;&#25731; &ndash; &#23398;&#32722;&#12487;&#12540;&#12479;&#27738;&#26579; &ndash;</strong></li>
+<li><strong>&#31532;&#65300;&#22238;&#65306;AI&#12398;&#12503;&#12521;&#12452;&#12496;&#12471;&#12540;&#20405;&#23475; &ndash; &#12513;&#12531;&#12496;&#12540;&#12471;&#12483;&#12503;&#25512;&#35542; &ndash;</strong></li>
+<li><strong>&#31532;&#65301;&#22238;&#65306;AI&#12398;&#25512;&#35542;&#12525;&#12472;&#12483;&#12463;&#12434;&#25913;&#12374;&#12435;&#12377;&#12427;&#25915;&#25731; &ndash; &#12494;&#12540;&#12489;&#27880;&#20837; &ndash;</strong></li>
+<li><strong>&#31532;&#65302;&#22238;&#65306;AI&#12471;&#12473;&#12486;&#12512;&#12408;&#12398;&#20405;&#20837; &ndash; &#27231;&#26800;&#23398;&#32722;&#12501;&#12524;&#12540;&#12512;&#12527;&#12540;&#12463;&#12398;&#24746;&#29992; &ndash;</strong></li>
+<li><strong>&#31532;&#65303;&#22238;&#65306;AI&#12398;&#36523;&#36794;&#35519;&#26619; &ndash; AI&#12395;&#23550;&#12377;&#12427;OSINT &ndash;</strong></li>
+<li><strong>&#31532;&#65304;&#22238;&#65306;&#12475;&#12461;&#12517;&#12450;&#12394;AI&#12434;&#38283;&#30330;&#12377;&#12427;&#12395;&#12399;&#65311; &ndash; &#22269;&#20869;&#22806;&#12398;&#12460;&#12452;&#12489;&#12521;&#12452;&#12531; &ndash;</strong></li>
+</ul><p>*1&hellip;&#20104;&#21578;&#12394;&#12375;&#12395;&#12479;&#12452;&#12488;&#12523;&#12399;&#22793;&#26356;&#12373;&#12428;&#12427;&#21487;&#33021;&#24615;&#12418;&#12354;&#12426;&#12414;&#12377;&#12290;&#12372;&#20102;&#25215;&#12367;&#12384;&#12373;&#12356;&#12290;</p>
+<div id="toc_container" class="toc_light_blue no_bullets"><p class="toc_title">&#30446;&#27425;</p><ul class="toc_list"><li><a href="#i">&#26412;&#35352;&#20107;&#12398;&#27010;&#35201;</a></li><li><a href="#AI">&#12300;AI&#12434;&#39449;&#12377;&#12301;&#25915;&#25731;</a><ul><li><a href="#i-2">&#22522;&#26412;&#30340;&#12394;&#20181;&#32068;&#12415;&#12395;&#12388;&#12356;&#12390;</a></li></ul></li><li><a href="#Adversarial_Examples">&#27096;&#12293;&#12394;Adversarial Examples</a><ul><li><a href="#Adversarial_Patch">Adversarial Patch&#65288;&#25973;&#23550;&#30340;&#12497;&#12483;&#12481;&#65289;</a></li><li><a href="#Audio_Adversarial_Examples">Audio Adversarial Examples&#65288;&#38899;&#22768;&#12398;&#25973;&#23550;&#30340;&#12469;&#12531;&#12503;&#12523;&#65289;</a></li><li><a href="#Adversarial_Examples-2">&#35328;&#35486;&#12398;Adversarial Examples</a></li><li><a href="#_-Black_Box_Attacks">&#12424;&#12426;&#29694;&#23455;&#30340;&#12394;&#25915;&#25731;&#12471;&#12490;&#12522;&#12458; -Black Box Attacks-</a></li></ul></li><li><a href="#i-3">&#23432;&#12427;&#12383;&#12417;&#12398;&#25163;&#27861;</a><ul><li><a href="#Adversarial_Training">Adversarial Training&#65288;&#25973;&#23550;&#30340;&#23398;&#32722;&#65289;</a></li><li><a href="#i-4">&#29305;&#24500;&#37327;&#12398;&#32094;&#12426;&#36796;&#12415;</a></li><li><a href="#i-5">&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12398;&#33976;&#30041;</a></li><li><a href="#i-6">&#12450;&#12531;&#12469;&#12531;&#12502;&#12523;&#12513;&#12477;&#12483;&#12489;</a></li><li><a href="#Autoencoder">Autoencoder&#12395;&#12424;&#12427;&#26908;&#20986;</a></li></ul></li><li><a href="#i-7">&#12414;&#12392;&#12417;</a></li></ul></div>
+<h2><span id="i">&#26412;&#35352;&#20107;&#12398;&#27010;&#35201;</span></h2>
+<p>&#31532;1&#22238;&#12391;&#12399;&#12289;&#12452;&#12531;&#12488;&#12525;&#12480;&#12463;&#12471;&#12519;&#12531;&#12392;&#12375;&#12390;&#12289;AI&#12434;&#21462;&#12426;&#24059;&#12367;&#29872;&#22659;&#12392;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#12395;&#12388;&#12356;&#12390;&#20840;&#20307;&#20687;&#12434;&#35299;&#35500;&#12356;&#12383;&#12375;&#12414;&#12375;&#12383;&#12290;</p>
+<p>&#26412;&#35352;&#20107;&#12399;&#36899;&#36617;&#31532;2&#22238;&#30446;&#12392;&#12375;&#12390;&#12289;&#12300;<strong>AI&#12434;&#39449;&#12377;&#25915;&#25731; -&#25973;&#23550;&#30340;&#12469;&#12531;&#12503;&#12523;-</strong>&#12301;&#12392;&#38988;&#12375;&#12289;<strong>&#26144;&#20687;&#12420;&#38899;&#22768;&#12394;&#12393;AI&#12408;&#12398;&#20837;&#21147;&#12487;&#12540;&#12479;&#12395;&#23550;&#12375;&#12390;&#32048;&#24037;&#12434;&#12377;&#12427;&#12371;&#12392;&#12395;&#12424;&#12387;&#12390;&#12289;&#24847;&#22259;&#30340;&#12395;AI&#12434;&#35492;&#35469;&#35672;&#12373;&#12379;&#12427;&#25915;&#25731;&#25163;&#27861;&#12392;&#38450;&#24481;&#25163;&#27861;&#12398;&#29694;&#29366;</strong>&#12395;&#12388;&#12356;&#12390;&#12414;&#12392;&#12417;&#12390;&#12356;&#12414;&#12377;&#12290;</p>
+<p><span style="font-size: 12pt;">&#9660;&#36899;&#36617;&#31532;1&#22238;&#65306;AI&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#36229;&#20837;&#38272;-&#12452;&#12531;&#12488;&#12525;&#12480;&#12463;&#12471;&#12519;&#12531;~AI&#12434;&#12392;&#12426;&#12414;&#12367;&#29872;&#22659;&#12392;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;~<br></span><span style="font-size: 12pt;"><div class="linkcard"><div class="lkc-internal-wrap"><a class="lkc-link no_icon" href="https://ainow.ai/2020/08/04/226635/"><div class="lkc-card"><div class="lkc-info"><span class="lkc-domain"><img class="lkc-favicon" src="https://www.google.com/s2/favicons?domain=ainow.ai" alt="" width="16" height="16"/>&nbsp;AI&#23554;&#38272;&#12491;&#12517;&#12540;&#12473;&#12513;&#12487;&#12451;&#12450; AINOW</span></div><div class="lkc-content"><span class="lkc-thumbnail"><img class="lkc-thumbnail-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://ainow.ai/wp-content/uploads/2020/07/a5e7bac03765aea089d1072055c65871-150x79.jpg" alt=""/></span><div class="lkc-title"><span class="lkc-title-text">&#12304;AI&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#36229;&#20837;&#38272;&#12305;&#31532;1&#35441; - &#12452;&#12531;&#12488;&#12525;&#12480;&#12463;&#12471;&#12519;&#12531; - AI&#12434;&#12392;&#12426;&#12414;&#12367;&#29872;&#22659;&#12392;&#12475;&#12461;&#12517;...</span></div><div class="lkc-url"><cite>https://ainow.ai/2020/08/04/226635/</cite></div><div class="lkc-excerpt">&#8251;&#12371;&#12398;&#35352;&#20107;&#12399;&#12289;&#26666;&#24335;&#20250;&#31038;ChillStack&#12392;&#19977;&#20117;&#29289;&#29987;&#12475;&#12461;&#12517;&#12450;&#12487;&#12451;&#12524;&#12463;&#12471;&#12519;&#12531;&#26666;&#24335;&#20250;&#31038;&#12475;&#12461;&#12517;&#12450;AI&#30740;&#31350;&#25152;&#12395;&#12424;&#12427;&#23492;&#31295;&#12391;&#12377;&#12290;&#36817;&#24180;&#12289;&#12487;&#12451;&#12540;&#12503;&#12521;&#12540;&#12491;&#12531;&#12464;&#12434;&#12399;&#12376;&#12417;&#12392;&#12377;&#12427;&#27096;&#12293;&#12394;&#27231;&#26800;&#23398;&#32722;&#12434;&#27963;&#29992;&#12375;&#12383;AI*1&#12398;&#30330;&#23637;&#12395;&#20276;&#12356;&#12289;&#26085;&#26412;&#22269;&#20869;&#12395;&#12362;&#12356;&#12390;&#12418;&#38996;&#35469;&#35388;&#12471;&#12473;&#12486;&#12512;&#12420;&#38450;&#29359;&#12471;&#12473;&#12486;&#12512;&#12289;&#33258;&#21205;&#36939;&#36578;&#25216;&#34899;&#12394;&#12393;...</div></div><div class="clear"></div></div></a></div></div></span></p>
+<h2><span id="AI">&#12300;AI&#12434;&#39449;&#12377;&#12301;&#25915;&#25731;</span></h2>
+<p>&#12371;&#12371;&#12391;&#12399;&#12289;&#12487;&#12540;&#12479;&#12434;&#20998;&#39006;&#12377;&#12427;AI&#12434;&#24819;&#23450;&#12375;&#12414;&#12377;&#12290;</p>
+<p>&#12356;&#12431;&#12422;&#12427;AI&#25216;&#34899;&#12392;&#21628;&#12400;&#12428;&#12427;&#12418;&#12398;&#12395;&#12399;&#12289;&#27096;&#12293;&#12394;&#27231;&#26800;&#23398;&#32722;&#12289;&#12487;&#12451;&#12540;&#12503;&#12521;&#12540;&#12491;&#12531;&#12464;&#12398;&#25216;&#34899;&#12364;&#12354;&#12426;&#12414;&#12377;&#12364;&#12289;&#20309;&#12363;&#12434;&#20998;&#39006;&#12377;&#12427;AI&#12399;&#22522;&#26412;&#30340;&#12395;&#12487;&#12540;&#12479;&#12398;&#29305;&#24500;&#12434;&#25277;&#20986;&#12375;&#12289;&#20309;&#12395;&#20998;&#39006;&#12373;&#12428;&#12427;&#12363;&#27770;&#23450;&#12377;&#12427;&#22659;&#30028;&#32218;&#65288;&#20197;&#38477;&#27770;&#23450;&#22659;&#30028;&#12392;&#12375;&#12414;&#12377;&#65289;&#12434;&#20316;&#25104;&#12375;&#12414;&#12377;&#12290;</p>
+<img class="aligncenter size-full wp-image-227048" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://ainow.ai/wp-content/uploads/2020/08/feb23d828fc0a40dc1af2bb70676998d.png" alt="" width="1272" height="477" data-srcset="https://ainow.ai/wp-content/uploads/2020/08/feb23d828fc0a40dc1af2bb70676998d.png 1272w, https://ainow.ai/wp-content/uploads/2020/08/feb23d828fc0a40dc1af2bb70676998d-150x56.png 150w, https://ainow.ai/wp-content/uploads/2020/08/feb23d828fc0a40dc1af2bb70676998d-300x113.png 300w, https://ainow.ai/wp-content/uploads/2020/08/feb23d828fc0a40dc1af2bb70676998d-768x288.png 768w" data-sizes="(max-width: 1272px) 100vw, 1272px"/><p><strong>&#12487;&#12540;&#12479;&#12364;&#12371;&#12398;&#27770;&#23450;&#22659;&#30028;&#12434;&#36229;&#12360;&#12390;&#26412;&#26469;&#12392;&#30064;&#12394;&#12427;&#20998;&#39006;&#12434;&#12377;&#12427;&#12392;&#12289;AI&#12399;&#12300;&#38291;&#36949;&#12360;&#12383;&#12301;&#12371;&#12392;&#12395;&#12394;&#12426;&#12414;&#12377;&#12290;</strong></p>
+<p>&#12371;&#12398;AI&#12364;&#12300;&#38291;&#36949;&#12360;&#12427;&#12301;&#20837;&#21147;&#12487;&#12540;&#12479;&#12434;&#12289;&#20154;&#38291;&#12395;&#12399;&#12411;&#12392;&#12435;&#12393;&#20998;&#12363;&#12425;&#12394;&#12356;&#23567;&#12373;&#12394;&#22793;&#21270;&#12434;&#19982;&#12360;&#12427;&#12371;&#12392;&#12395;&#12424;&#12426;&#24847;&#22259;&#30340;&#12395;&#20316;&#12427;&#25163;&#27861;&#12434;&rdquo;Adversarial Examples&rdquo;&#12289;&#26085;&#26412;&#35486;&#12391;&#12300;&#25973;&#23550;&#30340;&#12469;&#12531;&#12503;&#12523;&#12301;&#12392;&#21628;&#12403;&#12414;&#12377;&#12290;&#12414;&#12383;&#12289;&#12371;&#12398;Adversarial Examples&#12434;&#29992;&#12356;&#12390;AI&#12434;&#39449;&#12377;&#25915;&#25731;&#25163;&#27861;&#12434;&rdquo;Adversarial Attacks&rdquo;&#12392;&#21628;&#12406;&#12371;&#12392;&#12418;&#12354;&#12426;&#12414;&#12377;&#12290;</p>
+<h3><span id="i-2">&#22522;&#26412;&#30340;&#12394;&#20181;&#32068;&#12415;&#12395;&#12388;&#12356;&#12390;</span></h3>
+<p>AI&#12434;&#23398;&#32722;&#12373;&#12379;&#12427;&#38555;&#12289;&#12414;&#12378;&#23455;&#38555;&#12395;&#23398;&#32722;&#12487;&#12540;&#12479;&#12434;&#29992;&#12356;&#12390;&#35672;&#21029;&#12434;&#34892;&#12356;&#12289;&#27491;&#35299;&#12521;&#12505;&#12523;&#12392;&#12398;&#35492;&#24046;&#12364;&#23567;&#12373;&#12367;&#12394;&#12427;&#12424;&#12358;&#12395;&#12497;&#12521;&#12513;&#12540;&#12479;&#12434;&#26356;&#26032;&#12375;&#12390;&#12356;&#12365;&#12414;&#12377;&#12290;</p>
+<p>&#12371;&#12398;&#26178;&#12289;&#35492;&#24046;&#12364;&#22823;&#12365;&#12367;&#12394;&#12427;&#22793;&#21270;&#12434;&#35336;&#31639;&#12375;&#12289;&#12487;&#12540;&#12479;&#12395;&#21152;&#12360;&#12427;&#12371;&#12392;&#12395;&#12424;&#12426;AI&#12364;&#38291;&#36949;&#12360;&#12427;&#20837;&#21147;&#12487;&#12540;&#12479;&#12364;&#20316;&#25104;&#12373;&#12428;&#12414;&#12377;&#12290;</p>
+<img class="aligncenter size-full wp-image-227056" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://ainow.ai/wp-content/uploads/2020/08/e17ae6ac4a64c5002cc38d8ef1540d28-1.png" alt="" width="1349" height="554" data-srcset="https://ainow.ai/wp-content/uploads/2020/08/e17ae6ac4a64c5002cc38d8ef1540d28-1.png 1349w, https://ainow.ai/wp-content/uploads/2020/08/e17ae6ac4a64c5002cc38d8ef1540d28-1-150x62.png 150w, https://ainow.ai/wp-content/uploads/2020/08/e17ae6ac4a64c5002cc38d8ef1540d28-1-300x123.png 300w, https://ainow.ai/wp-content/uploads/2020/08/e17ae6ac4a64c5002cc38d8ef1540d28-1-768x315.png 768w" data-sizes="(max-width: 1349px) 100vw, 1349px"/><h2><span id="Adversarial_Examples">&#27096;&#12293;&#12394;Adversarial Examples</span></h2>
+<h3><span id="Adversarial_Patch">Adversarial Patch&#65288;&#25973;&#23550;&#30340;&#12497;&#12483;&#12481;&#65289;</span></h3>
+<p><span style="font-size: 12pt;">&#9660;&#21442;&#32771;&#25991;&#29486;&#65306;Fooling automated surveillance cameras:adversarial patches to attack person detection<br></span><span style="font-size: 12pt;"><div class="linkcard"><div class="lkc-external-wrap"><a class="lkc-link no_icon" href="https://arxiv.org/pdf/1904.08653.pdf"><div class="lkc-card"><div class="lkc-info"><span class="lkc-domain"><img class="lkc-favicon" src="https://www.google.com/s2/favicons?domain=arxiv.org" alt="" width="16" height="16"/>&nbsp;arxiv.org</span></div><div class="lkc-content"><div class="lkc-title"><span class="lkc-title-text">403 Forbidden</span></div><div class="lkc-url"><cite>https://arxiv.org/pdf/1904.08653.pdf</cite></div><div class="lkc-excerpt"></div></div><div class="clear"></div></div></a></div></div></span><br><span style="font-size: 12pt;">&#9660;&#21442;&#32771;&#25991;&#29486;&#65306;Model Hacking ADAS to Pave Safer Roads for Autonomous Vehicles<br></span><span style="font-size: 12pt;"><div class="linkcard"><div class="lkc-external-wrap"><a class="lkc-link no_icon" href="https://www.mcafee.com/blogs/other-blogs/mcafee-labs/model-hacking-adas-to-pave-safer-roads-for-autonomous-vehicles/"><div class="lkc-card"><div class="lkc-info"><span class="lkc-domain"><img class="lkc-favicon" src="https://www.google.com/s2/favicons?domain=www.mcafee.com" alt="" width="16" height="16"/>&nbsp;McAfee Blogs</span></div><div class="lkc-content"><span class="lkc-thumbnail"><img class="lkc-thumbnail-img" src="https://ainow.ai/wp-content/uploads/pz-linkcard/cache/a09d3f8277942145c5347d5c6c6dbebc51b6ae8cdaddecfb9e16f20c197a900a" alt=""/></span><div class="lkc-title"><span class="lkc-title-text">Model Hacking ADAS to Pave Safer Roads for Autonomous Vehicles | McAfee Blogs</span></div><div class="lkc-url"><cite>https://www.mcafee.com/blogs/other-blogs/mcafee-labs/model-hacking-adas-to-pave-safer-roads-for-autonomous-vehicles/</cite></div><div class="lkc-excerpt">The last several years have been fascinating for those of us who have been eagerly observing the steady move towards autonomous driving. While</div></div><div class="clear"></div></div></a></div></div></span></p>
+<p><strong>Adversarial Patch&#12399;&#12289;&#26144;&#20687;&#12420;&#30011;&#20687;&#12398;&#20013;&#12391;&#29305;&#23450;&#12398;&#27169;&#27096;&#65288;&#20197;&#38477;&#12497;&#12483;&#12481;&#65289;&#12434;&#21152;&#12360;&#12427;&#12371;&#12392;&#12391;&#12289;AI&#12434;&#39449;&#12377;&#25163;&#27861;&#12391;&#12377;&#12290;</strong></p>
+<p>&#20197;&#19979;&#12398;&#30011;&#20687;&#12399;&#12289;&#20154;&#38291;&#12434;&#26908;&#20986;&#12391;&#12365;&#12427;AI&#12395;&#23550;&#12375;&#12390;&#12289;&#12497;&#12483;&#12481;&#12434;&#25345;&#12387;&#12383;&#20154;&#38291;&#12364;&#20889;&#12387;&#12383;&#26178;&#12398;&#23455;&#39443;&#32080;&#26524;&#12395;&#12394;&#12426;&#12414;&#12377;&#12290;</p>
+<div id="attachment_227050" style="width: 778px" class="wp-caption aligncenter"><img class="wp-image-227050 size-full" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://ainow.ai/wp-content/uploads/2020/08/1ede739b17f8cf10576d812cd2f6b45b.jpg" alt="" width="768" height="562" data-srcset="https://ainow.ai/wp-content/uploads/2020/08/1ede739b17f8cf10576d812cd2f6b45b.jpg 768w, https://ainow.ai/wp-content/uploads/2020/08/1ede739b17f8cf10576d812cd2f6b45b-150x110.jpg 150w, https://ainow.ai/wp-content/uploads/2020/08/1ede739b17f8cf10576d812cd2f6b45b-300x220.jpg 300w" data-sizes="(max-width: 768px) 100vw, 768px"/><p class="wp-caption-text">Adversarial Patch&#12398;&#20363; &#20986;&#20856;&#65306;Fooling automated surveillance cameras: adversarial patches to attack person detection</p></div>
+<p>&#12497;&#12483;&#12481;&#12398;&#12394;&#12356;&#20154;&#12399;&#27491;&#12375;&#12367;&#26908;&#20986;&#12373;&#12428;&#12390;&#12356;&#12427;&#12398;&#12395;&#23550;&#12375;&#12289;&#12497;&#12483;&#12481;&#12434;&#25345;&#12387;&#12390;&#12356;&#12427;&#20154;&#12399;&#20154;&#38291;&#12392;&#35469;&#35672;&#12391;&#12365;&#12390;&#12356;&#12414;&#12379;&#12435;&#12290;</p>
+<p>&#12371;&#12398;&#12424;&#12358;&#12395;&#12289;<strong>&#20837;&#21147;&#20516;&#12398;&#19968;&#37096;&#20998;&#12384;&#12369;&#12395;&#29305;&#23450;&#12398;&#12497;&#12483;&#12481;&#12434;&#20837;&#12428;&#12427;&#12384;&#12369;&#12391;AI&#12434;&#39449;&#12377;&#12371;&#12392;&#12395;&#25104;&#21151;&#12375;&#12390;&#12356;&#12414;&#12377;&#12290;</strong></p>
+<p>&#12371;&#12398;&#20154;&#29289;&#26908;&#20986;AI&#12399;YOLOv2&#12392;&#21628;&#12400;&#12428;&#12427;&#38750;&#24120;&#12395;&#26377;&#21517;&#12394;&#29289;&#20307;&#26908;&#20986;AI&#12391;&#12289;&#12371;&#12398;AI&#12434;&#21033;&#29992;&#12375;&#12383;&#35069;&#21697;&#12399;&#21516;&#12376;&#12497;&#12483;&#12481;&#12391;&#39449;&#12377;&#12371;&#12392;&#12364;&#12391;&#12365;&#12289;&#38450;&#29359;&#12459;&#12513;&#12521;&#12420;&#33258;&#21205;&#36939;&#36578;&#12394;&#12393;&#27096;&#12293;&#12394;&#20998;&#37326;&#12391;&#34987;&#23475;&#12364;&#24819;&#23450;&#12373;&#12428;&#12414;&#12377;&#12290;</p>
+<p><strong>&#29305;&#12395;&#33258;&#21205;&#36939;&#36578;&#12391;&#12399;&#12289;&#20154;&#38291;&#20197;&#22806;&#12395;&#12418;&#36947;&#36335;&#27161;&#35672;&#12434;&#35492;&#35469;&#35672;&#12375;&#12390;&#12375;&#12414;&#12358;&#12392;&#22823;&#20107;&#25925;&#12395;&#12388;&#12394;&#12364;&#12387;&#12390;&#12375;&#12414;&#12356;&#12414;&#12377;&#12290;</strong></p>
+<p>&#26082;&#12395;&#12489;&#12521;&#12452;&#12496;&#12540;&#12469;&#12509;&#12540;&#12488;&#27231;&#33021;&#12395;&#23550;&#12375;&#12390;&#12289;&#36895;&#24230;&#27161;&#35672;&#12395;&#12494;&#12452;&#12474;&#12434;&#36617;&#12379;&#12427;&#12371;&#12392;&#12391;35mph&#65288;&#12510;&#12452;&#12523;&#27598;&#26178;&#65289;&#21046;&#38480;&#12392;&#12375;&#12390;&#35469;&#35672;&#12377;&#12409;&#12365;&#12392;&#12371;&#12429;&#12434;&#12289;85mph&#12392;&#12375;&#12390;&#35492;&#35469;&#35672;&#12373;&#12379;&#12427;&#12371;&#12392;&#12395;&#25104;&#21151;&#12375;&#12390;&#12356;&#12427;&#20363;&#12418;&#12354;&#12426;&#12414;&#12377;&#12290;</p>
+<div id="attachment_227051" style="width: 754px" class="wp-caption aligncenter"><img class="wp-image-227051 size-full" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://ainow.ai/wp-content/uploads/2020/08/85743f42abbb0114f231d4501b68686a.jpg" alt="" width="744" height="420" data-srcset="https://ainow.ai/wp-content/uploads/2020/08/85743f42abbb0114f231d4501b68686a.jpg 744w, https://ainow.ai/wp-content/uploads/2020/08/85743f42abbb0114f231d4501b68686a-150x85.jpg 150w, https://ainow.ai/wp-content/uploads/2020/08/85743f42abbb0114f231d4501b68686a-300x169.jpg 300w" data-sizes="(max-width: 744px) 100vw, 744px"/><p class="wp-caption-text">&#36895;&#24230;&#12469;&#12509;&#12540;&#12488;&#27231;&#33021;&#12434;&#35492;&#35469;&#35672;&#12373;&#12379;&#12383;&#23455;&#39443;&#30011;&#20687; &#20986;&#20856;&#65306;Model Hacking ADAS to Pave Safer Roads for Autonomous Vehicles</p></div>
+<h3><span id="Audio_Adversarial_Examples">Audio Adversarial Examples&#65288;&#38899;&#22768;&#12398;&#25973;&#23550;&#30340;&#12469;&#12531;&#12503;&#12523;&#65289;</span></h3>
+<p><span style="font-size: 12pt;">&#9660;&#21442;&#32771;&#25991;&#29486;&#65306;Audio Adversarial Examples<br></span><span style="font-size: 12pt;"><div class="linkcard"><div class="lkc-external-wrap"><a class="lkc-link no_icon" href="https://nicholas.carlini.com/code/audio_adversarial_examples/"><div class="lkc-card"><div class="lkc-info"><span class="lkc-domain"><img class="lkc-favicon" src="https://www.google.com/s2/favicons?domain=nicholas.carlini.com" alt="" width="16" height="16"/>&nbsp;nicholas.carlini.com</span></div><div class="lkc-content"><span class="lkc-thumbnail"><img class="lkc-thumbnail-img" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fnicholas.carlini.com%2Fcode%2Faudio_adversarial_examples%2F?w=100" alt=""/></span><div class="lkc-title"><span class="lkc-title-text">Audio Adversarial Examples    </span></div><div class="lkc-url"><cite>https://nicholas.carlini.com/code/audio_adversarial_examples/</cite></div><div class="lkc-excerpt"></div></div><div class="clear"></div></div></a></div></div></span></p>
+<p>Audio Adversarial Examples&#12399;&#12289;&#38899;&#22768;&#12395;&#23550;&#12377;&#12427;&#25973;&#23550;&#30340;&#12469;&#12531;&#12503;&#12523;&#12434;&#20316;&#25104;&#12377;&#12427;&#25163;&#27861;&#12391;&#12377;&#12290;</p>
+<p>&#12473;&#12510;&#12540;&#12488;&#12473;&#12500;&#12540;&#12459;&#12540;&#12434;&#12399;&#12376;&#12417;&#12392;&#12377;&#12427;&#38899;&#22768;&#35469;&#35672;AI&#12391;&#12399;&#12289;&#31169;&#12383;&#12385;&#12398;&#38899;&#22768;&#12434;&#25991;&#23383;&#12395;&#12362;&#12371;&#12377; speech-to-text &#12514;&#12487;&#12523;&#12434;&#36890;&#12376;&#12390;&#29702;&#35299;&#12375;&#12289;&#21205;&#20316;&#12375;&#12390;&#12356;&#12414;&#12377;&#12290;</p>
+<p>&#12381;&#12398;&#38899;&#22768;&#12395;&#23550;&#12375;&#12390;&#24494;&#23567;&#12394;&#22793;&#21270;&#12434;&#36861;&#21152;&#12377;&#12427;&#12371;&#12392;&#12395;&#12424;&#12426;&#12289;&#20154;&#38291;&#12395;&#12399;&#32862;&#12365;&#20998;&#12369;&#12425;&#12428;&#12394;&#12356;&#22793;&#21270;&#12391;&#20840;&#12367;&#30064;&#12394;&#12427;&#21629;&#20196;&#12434;&#12473;&#12510;&#12540;&#12488;&#12473;&#12500;&#12540;&#12459;&#12540;&#12395;&#19982;&#12360;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12394;&#12426;&#12414;&#12377;&#12290;</p>
+<div id="attachment_227052" style="width: 747px" class="wp-caption aligncenter"><img class="wp-image-227052 size-full" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://ainow.ai/wp-content/uploads/2020/08/66385d1b832a0874e00b082ea79d522c.png" alt="" width="737" height="523" data-srcset="https://ainow.ai/wp-content/uploads/2020/08/66385d1b832a0874e00b082ea79d522c.png 737w, https://ainow.ai/wp-content/uploads/2020/08/66385d1b832a0874e00b082ea79d522c-150x106.png 150w, https://ainow.ai/wp-content/uploads/2020/08/66385d1b832a0874e00b082ea79d522c-300x213.png 300w" data-sizes="(max-width: 737px) 100vw, 737px"/><p class="wp-caption-text">&#38899;&#22768;&#12398;Adversarial Examples&#20363; &#20986;&#20856;&#65306;Audio Adversarial Examples</p></div>
+<p>&#12371;&#12428;&#12395;&#12424;&#12426;&#12289;&#24746;&#24847;&#12398;&#12354;&#12427;&#21629;&#20196;&#12434;&#12473;&#12510;&#12540;&#12488;&#12473;&#12500;&#12540;&#12459;&#12540;&#12395;&#19982;&#12360;&#12289;&#37749;&#12434;&#35299;&#37664;&#12377;&#12427;&#12394;&#12393;&#12398;&#29289;&#29702;&#30340;&#12394;&#34987;&#23475;&#12363;&#12425;&#12289;&#24746;&#36074;&#12394;&#12469;&#12452;&#12488;&#12408;&#12398;&#12450;&#12463;&#12475;&#12473;&#12434;&#34892;&#12358;&#34987;&#23475;&#12394;&#12393;&#12434;&#20154;&#12364;&#27671;&#12389;&#12363;&#12394;&#12356;&#12414;&#12414;&#34892;&#12431;&#12428;&#12427;&#21361;&#38522;&#24615;&#12364;&#12354;&#12426;&#12414;&#12377;&#12290;</p>
+<h3><span id="Adversarial_Examples-2">&#35328;&#35486;&#12398;Adversarial Examples</span></h3>
+<p><span style="font-size: 12pt;">&#9660;&#21442;&#32771;&#25991;&#29486;&#65306;Adversarial Attacks and Defense on Texts<br></span><span style="font-size: 12pt;"><div class="linkcard"><div class="lkc-external-wrap"><a class="lkc-link no_icon" href="https://jpsec.ai/nlp/adversarial/2020/06/17/Adversarial-Attacks-and-Defense-on-Texts-A-Survey01.html"><div class="lkc-card"><div class="lkc-info"><span class="lkc-domain"><img class="lkc-favicon" src="https://www.google.com/s2/favicons?domain=jpsec.ai" alt="" width="16" height="16"/>&nbsp;jpsec.ai</span></div><div class="lkc-content"><span class="lkc-thumbnail"><img class="lkc-thumbnail-img" src="https://ainow.ai/wp-content/uploads/pz-linkcard/cache/b0d4a53cab273a2633b4d2607ffe26ef54f226a6ce182e9068c6452e2e54a6ee" alt=""/></span><div class="lkc-title"><span class="lkc-title-text">&#12475;&#12461;&#12517;&#12450;AI&#38283;&#30330;&#12488;&#12524;&#12540;&#12491;&#12531;&#12464;</span></div><div class="lkc-url"><cite>https://jpsec.ai/nlp/adversarial/2020/06/17/Adversarial-Attacks-and-Defense-on-Texts-A-Survey01.html</cite></div><div class="lkc-excerpt"></div></div><div class="clear"></div></div></a></div></div></span></p>
+<p>&#33258;&#28982;&#35328;&#35486;&#12395;&#23550;&#12377;&#12427;Adversarial Examples&#12418;&#23384;&#22312;&#12375;&#12414;&#12377;&#12290;</p>
+<p>&#25991;&#23383;&#12524;&#12505;&#12523;&#12289;&#21336;&#35486;&#12524;&#12505;&#12523;&#12289;&#25991;&#31456;&#12524;&#12505;&#12523;&#12391;&#12381;&#12428;&#12382;&#12428;&#25915;&#25731;&#25163;&#27861;&#12364;&#23384;&#22312;&#12375;&#12390;&#12362;&#12426;&#12289;&#33521;&#35486;&#12420;&#26085;&#26412;&#35486;&#12394;&#12393;&#12398;&#35328;&#35486;&#27598;&#12398;&#29305;&#24500;&#12395;&#23550;&#12375;&#12390;&#12418;&#25915;&#25731;&#25163;&#27861;&#12364;&#21029;&#12293;&#12395;&#23384;&#22312;&#12375;&#12390;&#12356;&#12414;&#12377;&#12290;</p>
+<p>&#33258;&#28982;&#35328;&#35486;&#12395;&#38306;&#12375;&#12390;&#12399;&#12289;<strong>&#22823;&#12365;&#12367;&#65298;&#12388;&#12398;&#25915;&#25731;</strong>&#12395;&#20998;&#12369;&#12425;&#12428;&#12414;&#12377;&#12290;</p>
+<ol><li><strong>AI&#12392;&#20154;&#38291;&#20001;&#26041;&#12434;&#39449;&#12377;&#25915;&#25731;</strong><br>
+&#20363;&#12392;&#12375;&#12390;&#12473;&#12497;&#12512;&#12513;&#12540;&#12523;&#12364;&#25369;&#12370;&#12425;&#12428;&#12414;&#12377;&#12290;<br>
+&#12473;&#12497;&#12512;&#12513;&#12540;&#12523;&#12501;&#12451;&#12523;&#12479;&#12434;&#39449;&#12375;&#12383;&#19978;&#12391;&#12289;&#20154;&#38291;&#12418;&#39449;&#12375;&#12390;&#12522;&#12531;&#12463;&#12434;&#12463;&#12522;&#12483;&#12463;&#12373;&#12379;&#12427;&#12289;&#36820;&#20449;&#12434;&#12373;&#12379;&#12427;&#12394;&#12393;&#12398;&#34892;&#21205;&#12434;&#36215;&#12371;&#12377;&#30446;&#30340;&#12391;&#21033;&#29992;&#12373;&#12428;&#12414;&#12377;&#12290;</li>
+<li><strong>AI&#12434;&#39449;&#12375;&#12289;&#20154;&#38291;&#12395;&#12399;&#29702;&#35299;&#12373;&#12379;&#12427;&#25915;&#25731;</strong><br>
+&#20363;&#12392;&#12375;&#12390;&#35513;&#35607;&#20013;&#20663;&#12467;&#12513;&#12531;&#12488;&#12364;&#25369;&#12370;&#12425;&#12428;&#12414;&#12377;&#12290;<br>
+&#35513;&#35607;&#20013;&#20663;&#12394;&#12393;&#12398;&#35328;&#33865;&#12434;&#12501;&#12451;&#12523;&#12479;&#12522;&#12531;&#12464;&#12377;&#12427;AI&#12434;&#39449;&#12375;&#12383;&#19978;&#12391;&#12289;&#30446;&#30340;&#12398;&#30456;&#25163;&#12395;&#35513;&#35607;&#20013;&#20663;&#12434;&#25237;&#12370;&#12363;&#12369;&#12427;&#30446;&#30340;&#12391;&#21033;&#29992;&#12373;&#12428;&#12414;&#12377;&#12290;<br>
+&#26085;&#26412;&#35486;&#12391;&#12399;&#12289;&#20363;&#12360;&#12400;&#12300;&#12496;&#12459;&#12301;&#12434;&#12300;&#12496;&#21147;&#65288;&rdquo;&#12385;&#12363;&#12425;&rdquo;&#12398;&#28450;&#23383;&#65289;&#12301;&#12392;&#32622;&#12365;&#25563;&#12360;&#12427;&#12392;&#12289;&#20154;&#38291;&#12399;&#29702;&#35299;&#12391;&#12365;&#12414;&#12377;&#12364;AI&#19978;&#12391;&#12399;&#20840;&#12367;&#24847;&#21619;&#12398;&#12394;&#12356;&#35328;&#33865;&#12392;&#12375;&#12390;&#36890;&#12387;&#12390;&#12375;&#12414;&#12358;&#12465;&#12540;&#12473;&#12364;&#22810;&#12356;&#12391;&#12377;&#12290;</li>
+</ol><h3><span id="_-Black_Box_Attacks">&#12424;&#12426;&#29694;&#23455;&#30340;&#12394;&#25915;&#25731;&#12471;&#12490;&#12522;&#12458; -Black Box Attacks-</span></h3>
+<p><span style="font-size: 12pt;">&#9660;&#21442;&#32771;&#25991;&#29486;&#65306;Practical Black-Box Attacks against Machine Learning<br></span><span style="font-size: 12pt;"><div class="linkcard"><div class="lkc-external-wrap"><a class="lkc-link no_icon" href="https://arxiv.org/abs/1602.02697"><div class="lkc-card"><div class="lkc-info"><span class="lkc-domain"><img class="lkc-favicon" src="https://www.google.com/s2/favicons?domain=arxiv.org" alt="" width="16" height="16"/>&nbsp;arXiv.org</span></div><div class="lkc-content"><span class="lkc-thumbnail"><img class="lkc-thumbnail-img" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Farxiv.org%2Fabs%2F1602.02697?w=100" alt=""/></span><div class="lkc-title"><span class="lkc-title-text">Practical Black-Box Attacks against Machine Learning</span></div><div class="lkc-url"><cite>https://arxiv.org/abs/1602.02697</cite></div><div class="lkc-excerpt">Machine learning (ML) models, e.g., deep neural networks (DNNs), arevulnerable to adversarial examples: malicious inputs modified to yielderroneous model outputs, while appearing unmodified to human observers.Potential attacks include having malic...</div></div><div class="clear"></div></div></a></div></div></span><br><span style="font-size: 12pt;">&#9660;&#21442;&#32771;&#25991;&#29486;&#65306;ZOO: Zeroth Order Optimization based Black-box Attacks to Deep Neural Networks without Training Substitute Models<br></span><span style="font-size: 12pt;"><div class="linkcard"><div class="lkc-external-wrap"><a class="lkc-link no_icon" href="https://arxiv.org/abs/1708.03999"><div class="lkc-card"><div class="lkc-info"><span class="lkc-domain"><img class="lkc-favicon" src="https://www.google.com/s2/favicons?domain=arxiv.org" alt="" width="16" height="16"/>&nbsp;arXiv.org</span></div><div class="lkc-content"><span class="lkc-thumbnail"><img class="lkc-thumbnail-img" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Farxiv.org%2Fabs%2F1708.03999?w=100" alt=""/></span><div class="lkc-title"><span class="lkc-title-text">ZOO: Zeroth Order Optimization based Black-box Attacks to Deep Neural Network...</span></div><div class="lkc-url"><cite>https://arxiv.org/abs/1708.03999</cite></div><div class="lkc-excerpt">Deep neural networks (DNNs) are one of the most prominent technologies of ourtime, as they achieve state-of-the-art performance in many machine learningtasks, including but not limited to image classification, text mining, andspeech processing. Ho...</div></div><div class="clear"></div></div></a></div></div></span></p>
+<p>&#24517;&#35201;&#12394;&#20107;&#21069;&#24773;&#22577;&#12364;&#19968;&#20999;&#12356;&#12425;&#12378;&#12289;<strong>AI&#12408;&#12398;&#20837;&#20986;&#21147;&#12487;&#12540;&#12479;&#12398;&#12415;&#12391;Adversarial Examples&#12434;&#29983;&#25104;&#12375;&#25915;&#25731;&#12434;&#25104;&#31435;&#12373;&#12379;&#12427;Black Box&#12394;&#25915;&#25731;&#25163;&#27861;&#12418;&#23384;&#22312;&#12375;&#12414;&#12377;&#12290;</strong></p>
+<p>&#20363;&#12360;&#12400;&#12289;&#25915;&#25731;&#23550;&#35937;&#12398;AI&#12395;&#36817;&#12356;&#12467;&#12500;&#12540;&#12434;&#25163;&#20803;&#12395;&#20316;&#25104;&#12375;&#12289;&#12467;&#12500;&#12540;&#12375;&#12383;AI&#12395;&#23550;&#12377;&#12427;Adversarial Examples&#12434;&#20316;&#25104;&#12377;&#12427;&#12371;&#12392;&#12391;&#12289;&#20803;&#12398;&#25915;&#25731;&#23550;&#35937;&#12398;AI&#12418;&#39449;&#12379;&#12427;&#12424;&#12358;&#12395;&#12394;&#12427;&#12424;&#12358;&#12394;&#25163;&#27861;&#12364;&#23384;&#22312;&#12375;&#12414;&#12377;&#12290;</p>
+<div id="attachment_227053" style="width: 648px" class="wp-caption aligncenter"><img class="wp-image-227053 size-full" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://ainow.ai/wp-content/uploads/2020/08/f123e7ab81f48c8c1a0cbe577f2d260f.png" alt="" width="638" height="585" data-srcset="https://ainow.ai/wp-content/uploads/2020/08/f123e7ab81f48c8c1a0cbe577f2d260f.png 638w, https://ainow.ai/wp-content/uploads/2020/08/f123e7ab81f48c8c1a0cbe577f2d260f-150x138.png 150w, https://ainow.ai/wp-content/uploads/2020/08/f123e7ab81f48c8c1a0cbe577f2d260f-300x275.png 300w" data-sizes="(max-width: 638px) 100vw, 638px"/><p class="wp-caption-text">Black Box&#12391;&#25915;&#25731;&#12377;&#12427;&#25163;&#27861;&#20363;</p></div>
+<p>&#20182;&#12395;&#12418;&#12289;&#12381;&#12418;&#12381;&#12418;&#12467;&#12500;&#12540;&#12434;&#20316;&#12427;&#20316;&#26989;&#12394;&#12375;&#12391;Black Box Attacks&#12434;&#25104;&#21151;&#12373;&#12379;&#12427;&#25163;&#27861;&#12394;&#12393;&#12418;&#12354;&#12426;&#12414;&#12377;&#12290;</p>
+<p>&#12371;&#12398;&#12424;&#12358;&#12395;&#12289;&#20107;&#21069;&#24773;&#22577;&#12434;&#24517;&#35201;&#12392;&#12379;&#12378;&#12289;&#23569;&#37327;&#12398;&#12487;&#12540;&#12479;&#12434;&#25915;&#25731;&#23550;&#35937;&#12398;AI&#12395;&#36890;&#12377;&#12384;&#12369;&#12391;&#25915;&#25731;&#12364;&#25104;&#31435;&#12375;&#12390;&#12375;&#12414;&#12358;&#12471;&#12490;&#12522;&#12458;&#12418;&#12354;&#12427;&#12383;&#12417;&#12289;Adversarial Attacks&#12363;&#12425;AI&#12434;&#23432;&#12427;&#24847;&#35672;&#12399;&#38750;&#24120;&#12395;&#22823;&#20999;&#12395;&#12394;&#12426;&#12414;&#12377;&#12290;</p>
+<h2><span id="i-3">&#23432;&#12427;&#12383;&#12417;&#12398;&#25163;&#27861;</span></h2>
+<p><span style="font-size: 12pt;">&#9660;&#21442;&#32771;&#25991;&#29486;&#65306;&#27231;&#26800;&#23398;&#32722;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#12398;&#12505;&#12473;&#12488;&#12503;&#12521;&#12463;&#12486;&#12451;&#12473;<br></span><span style="font-size: 12pt;"><div class="linkcard"><div class="lkc-external-wrap"><a class="lkc-link no_icon" href="https://jpsec.ai/nist/sp800-30/guideline/2020/07/08/NISTIR8269.html"><div class="lkc-card"><div class="lkc-info"><span class="lkc-domain"><img class="lkc-favicon" src="https://www.google.com/s2/favicons?domain=jpsec.ai" alt="" width="16" height="16"/>&nbsp;jpsec.ai</span></div><div class="lkc-content"><span class="lkc-thumbnail"><img class="lkc-thumbnail-img" src="https://ainow.ai/wp-content/uploads/pz-linkcard/cache/9d8e4dbd09c63e5447e1fc26a204912a4756f301401972fa0da8745618c6ece1" alt=""/></span><div class="lkc-title"><span class="lkc-title-text">&#12475;&#12461;&#12517;&#12450;AI&#38283;&#30330;&#12488;&#12524;&#12540;&#12491;&#12531;&#12464;</span></div><div class="lkc-url"><cite>https://jpsec.ai/nist/sp800-30/guideline/2020/07/08/NISTIR8269.html</cite></div><div class="lkc-excerpt"></div></div><div class="clear"></div></div></a></div></div></span></p>
+<p>&#12371;&#12371;&#12414;&#12391;&#32057;&#20171;&#12375;&#12383;&#27096;&#12293;&#12394;Adversarial Attacks&#12363;&#12425;AI&#12434;&#23432;&#12427;&#12383;&#12417;&#12395;&#12399;&#12289;&#19979;&#35352;&#12395;&#38450;&#24481;&#25163;&#27861;&#12398;&#20363;&#12434;&#25369;&#12370;&#12414;&#12377;&#12290;</p>
+<p>&#27880;&#24847;&#28857;&#12392;&#12375;&#12390;&#12289;&#12371;&#12428;&#12363;&#12425;&#20363;&#31034;&#12377;&#12427;&#38450;&#24481;&#25163;&#27861;&#12434;&#30772;&#12427;&#25915;&#25731;&#25163;&#27861;&#12418;&#30740;&#31350;&#12364;&#36914;&#12435;&#12391;&#12356;&#12427;&#12383;&#12417;&#12289;&#35079;&#25968;&#12398;&#38450;&#24481;&#25163;&#27861;&#12434;&#32068;&#12415;&#21512;&#12431;&#12379;&#12390;&#12356;&#12367;&#12371;&#12392;&#12364;&#37325;&#35201;&#12395;&#12394;&#12426;&#12414;&#12377;&#12290;</p>
+<h3><span id="Adversarial_Training">Adversarial Training&#65288;&#25973;&#23550;&#30340;&#23398;&#32722;&#65289;</span></h3>
+<p><span style="font-size: 12pt;">&#9660;&#21442;&#32771;&#25991;&#29486;&#65306;Smooth Adversarial Training<br></span><span style="font-size: 12pt;"><div class="linkcard"><div class="lkc-external-wrap"><a class="lkc-link no_icon" href="https://arxiv.org/abs/2006.14536"><div class="lkc-card"><div class="lkc-info"><span class="lkc-domain"><img class="lkc-favicon" src="https://www.google.com/s2/favicons?domain=arxiv.org" alt="" width="16" height="16"/>&nbsp;arXiv.org</span></div><div class="lkc-content"><span class="lkc-thumbnail"><img class="lkc-thumbnail-img" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Farxiv.org%2Fabs%2F2006.14536?w=100" alt=""/></span><div class="lkc-title"><span class="lkc-title-text">Smooth Adversarial Training</span></div><div class="lkc-url"><cite>https://arxiv.org/abs/2006.14536</cite></div><div class="lkc-excerpt">It is commonly believed that networks cannot be both accurate and robust,that gaining robustness means losing accuracy. It is also generally believedthat, unless making networks larger, network architectural elements wouldotherwise matter little i...</div></div><div class="clear"></div></div></a></div></div></span></p>
+<p>Adversarial Examples&#12434;&#23398;&#32722;&#12487;&#12540;&#12479;&#12392;&#12375;&#12390;&#29992;&#12356;&#12427;&#12371;&#12392;&#12391;&#12289;AI&#33258;&#36523;&#12398;Adversarial Examples&#12395;&#23550;&#12377;&#12427;&#32784;&#24615;&#12434;&#19978;&#12370;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12414;&#12377;&#12290;&#12383;&#12384;&#12289;&#36890;&#24120;&#12398;Adversarial Training&#12391;&#22533;&#29282;&#24615;&#12434;&#39640;&#12417;&#12390;&#12356;&#12367;&#12392;&#12289;&#12354;&#12427;&#31243;&#24230;&#31934;&#24230;&#12398;&#20302;&#19979;&#12420;&#35336;&#31639;&#12467;&#12473;&#12488;&#12364;&#12363;&#12363;&#12387;&#12390;&#12375;&#12414;&#12358;&#22580;&#21512;&#12364;&#12354;&#12426;&#12414;&#12377;&#12290;</p>
+<p>&#26368;&#36817;&#12398;&#30740;&#31350;&#12391;&#12399;&#12289;&#31934;&#24230;&#12398;&#20302;&#19979;&#12420;&#35336;&#31639;&#12467;&#12473;&#12488;&#12398;&#22679;&#21152;&#12398;&#12394;&#12356;&#12289;Smooth Adversarial Training&#12392;&#21628;&#12400;&#12428;&#12427;&#25163;&#27861;&#12394;&#12393;&#12364;&#25552;&#26696;&#12373;&#12428;&#12390;&#12356;&#12414;&#12377;&#12290;&#65288;&#21442;&#32771;&#25991;&#29486;&#21442;&#29031;&#65289;</p>
+<h3><span id="i-4">&#29305;&#24500;&#37327;&#12398;&#32094;&#12426;&#36796;&#12415;</span></h3>
+<p><span style="font-size: 12pt;">&#9660;&#21442;&#32771;&#25991;&#29486;&#65306;Detecting Adversarial Examples in Deep Neural Networks<br></span><span style="font-size: 12pt;"><div class="linkcard"><div class="lkc-external-wrap"><a class="lkc-link no_icon" href="https://evademl.org"><div class="lkc-card"><div class="lkc-info"><span class="lkc-domain"><img class="lkc-favicon" src="https://www.google.com/s2/favicons?domain=evademl.org" alt="" width="16" height="16"/>&nbsp;evademl.org</span></div><div class="lkc-content"><span class="lkc-thumbnail"><img class="lkc-thumbnail-img" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fevademl.org?w=100" alt=""/></span><div class="lkc-title"><span class="lkc-title-text">EvadeML</span></div><div class="lkc-url"><cite>https://evademl.org</cite></div><div class="lkc-excerpt"></div></div><div class="clear"></div></div></a></div></div></span></p>
+<p><strong>&#30011;&#20687;&#12434;&#12412;&#12363;&#12375;&#12390;&#24517;&#35201;&#26368;&#20302;&#38480;&#12398;&#24773;&#22577;&#12398;&#12415;&#12395;&#12377;&#12427;&#12394;&#12393;&#12398;&#23550;&#31574;&#12434;&#34892;&#12358;&#12371;&#12392;&#12395;&#12424;&#12387;&#12390;&#12289;&#25915;&#25731;&#32773;&#12364;Adversarial Examples&#12434;&#12354;&#12427;&#31243;&#24230;&#20316;&#25104;&#12375;&#12389;&#12425;&#12356;AI&#12434;&#20316;&#25104;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12414;&#12377;&#12290;</strong></p>
+<div id="attachment_227054" style="width: 947px" class="wp-caption aligncenter"><img class="wp-image-227054 size-full" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://ainow.ai/wp-content/uploads/2020/08/88ec7d2144db43794ca855647a91dbdf.png" alt="" width="937" height="294" data-srcset="https://ainow.ai/wp-content/uploads/2020/08/88ec7d2144db43794ca855647a91dbdf.png 937w, https://ainow.ai/wp-content/uploads/2020/08/88ec7d2144db43794ca855647a91dbdf-150x47.png 150w, https://ainow.ai/wp-content/uploads/2020/08/88ec7d2144db43794ca855647a91dbdf-300x94.png 300w, https://ainow.ai/wp-content/uploads/2020/08/88ec7d2144db43794ca855647a91dbdf-768x241.png 768w" data-sizes="(max-width: 937px) 100vw, 937px"/><p class="wp-caption-text">&#29305;&#24500;&#37327;&#32094;&#12426;&#36796;&#12415;&#12398;&#20363; &#20986;&#20856;&#65306;Detecting Adversarial Examples in Deep Neural Networks</p></div>
+<h3><span id="i-5">&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12398;&#33976;&#30041;</span></h3>
+<p><span style="font-size: 12pt;">&#9660;&#21442;&#32771;&#25991;&#29486;&#65306;Distillation as a Defense to Adversarial Perturbations against Deep Neural Networks<br></span><span style="font-size: 12pt;"><div class="linkcard"><div class="lkc-external-wrap"><a class="lkc-link no_icon" href="https://arxiv.org/abs/1511.04508"><div class="lkc-card"><div class="lkc-info"><span class="lkc-domain"><img class="lkc-favicon" src="https://www.google.com/s2/favicons?domain=arxiv.org" alt="" width="16" height="16"/>&nbsp;arXiv.org</span></div><div class="lkc-content"><span class="lkc-thumbnail"><img class="lkc-thumbnail-img" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Farxiv.org%2Fabs%2F1511.04508?w=100" alt=""/></span><div class="lkc-title"><span class="lkc-title-text">Distillation as a Defense to Adversarial Perturbations against Deep Neural Ne...</span></div><div class="lkc-url"><cite>https://arxiv.org/abs/1511.04508</cite></div><div class="lkc-excerpt">Deep learning algorithms have been shown to perform extremely well on manyclassical machine learning problems. However, recent studies have shown thatdeep learning, like other machine learning techniques, is vulnerable toadversarial samples: input...</div></div><div class="clear"></div></div></a></div></div></span></p>
+<p>&#33976;&#30041;&#12399;&#12289;&#24040;&#22823;&#12394;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12394;&#12393;&#12434;&#12394;&#12427;&#12409;&#12367;&#31934;&#24230;&#12434;&#33853;&#12392;&#12373;&#12378;&#12395;&#23567;&#12373;&#12356;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12395;&#12377;&#12427;&#25163;&#27861;&#12391;&#12377;&#12364;&#12289;&#12381;&#12428;&#12434;Adversarial Examples&#12363;&#12425;&#23432;&#12427;&#25163;&#27861;&#12392;&#12375;&#12390;&#29992;&#12356;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12414;&#12377;&#12290;</p>
+<h3><span id="i-6">&#12450;&#12531;&#12469;&#12531;&#12502;&#12523;&#12513;&#12477;&#12483;&#12489;</span></h3>
+<p>&#35079;&#25968;&#12398;&#65288;&#30064;&#12394;&#12427;&#12450;&#12540;&#12461;&#12486;&#12463;&#12481;&#12515;&#12398;&#65289;AI&#12434;&#32068;&#12415;&#21512;&#12431;&#12379;&#12390;&#23398;&#32722;&#12377;&#12427;&#12371;&#12392;&#12391;&#12289;&#38929;&#20581;&#24615;&#12434;&#19978;&#12370;&#12427;&#12450;&#12531;&#12469;&#12531;&#12502;&#12523;&#12513;&#12477;&#12483;&#12489;&#12364;&#38450;&#24481;&#25163;&#27861;&#12392;&#12375;&#12390;&#26377;&#21177;&#12394;&#12465;&#12540;&#12473;&#12364;&#12354;&#12426;&#12414;&#12377;&#12290;</p>
+<h3><span id="Autoencoder">Autoencoder&#12395;&#12424;&#12427;&#26908;&#20986;</span></h3>
+<p><span style="font-size: 12pt;">&#9660;&#21442;&#32771;&#25991;&#29486;&#65306;PuVAE: A Variational Autoencoder to Purify Adversarial Examples<br></span><span style="font-size: 12pt;"><div class="linkcard"><div class="lkc-external-wrap"><a class="lkc-link no_icon" href="https://arxiv.org/abs/1903.00585"><div class="lkc-card"><div class="lkc-info"><span class="lkc-domain"><img class="lkc-favicon" src="https://www.google.com/s2/favicons?domain=arxiv.org" alt="" width="16" height="16"/>&nbsp;arXiv.org</span></div><div class="lkc-content"><span class="lkc-thumbnail"><img class="lkc-thumbnail-img" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Farxiv.org%2Fabs%2F1903.00585?w=100" alt=""/></span><div class="lkc-title"><span class="lkc-title-text">PuVAE: A Variational Autoencoder to Purify Adversarial Examples</span></div><div class="lkc-url"><cite>https://arxiv.org/abs/1903.00585</cite></div><div class="lkc-excerpt">Deep neural networks are widely used and exhibit excellent performance inmany areas. However, they are vulnerable to adversarial attacks that compromisethe network at the inference time by applying elaborately designed perturbationto input data. A...</div></div><div class="clear"></div></div></a></div></div></span></p>
+<p>Autoencoder&#12392;&#21628;&#12400;&#12428;&#12427;&#12289;&#12487;&#12540;&#12479;&#12434;&#22311;&#32302;&#12375;&#12390;&#24489;&#20803;&#12377;&#12427;&#12487;&#12451;&#12540;&#12503;&#12521;&#12540;&#12491;&#12531;&#12464;&#12514;&#12487;&#12523;&#12434;&#29992;&#12356;&#12390;&#12289;&#20837;&#21147;&#12373;&#12428;&#12383;&#12487;&#12540;&#12479;&#12364;Adversarial Examples&#12363;&#12393;&#12358;&#12363;&#26908;&#20986;&#12375;&#12390;&#12375;&#12414;&#12362;&#12358;&#12392;&#12356;&#12358;&#38450;&#24481;&#25163;&#27861;&#12364;&#25552;&#26696;&#12373;&#12428;&#12390;&#12356;&#12414;&#12377;&#12290;</p>
+<h2><span id="i-7">&#12414;&#12392;&#12417;</span></h2>
+<p>&#26412;&#35352;&#20107;&#12391;&#12399;&#12289;&#27096;&#12293;&#12394;Adversarial Examples&#12395;&#12388;&#12356;&#12390;&#32057;&#20171;&#12356;&#12383;&#12375;&#12414;&#12375;&#12383;&#12290;</p>
+<p>Adversarial Examples&#12434;&#29992;&#12356;&#12383;&#25915;&#25731;&#12399;&#34987;&#23475;&#12364;&#12392;&#12390;&#12418;&#22823;&#12365;&#12367;&#12394;&#12427;&#22580;&#21512;&#12364;&#22810;&#12367;&#12289;&#22810;&#27096;&#12394;&#25915;&#25731;&#25163;&#27861;&#12395;&#23550;&#20966;&#12377;&#12427;&#12383;&#12417;&#12289;AI&#12398;&#35373;&#35336;&#12420;&#38283;&#30330;&#12434;&#34892;&#12358;&#27573;&#38542;&#12391;&#36969;&#20999;&#12399;&#38450;&#24481;&#25163;&#27861;&#12434;&#21462;&#12426;&#20837;&#12428;&#24910;&#37325;&#12395;&#36939;&#29992;&#12377;&#12427;&#24517;&#35201;&#12364;&#12354;&#12426;&#12414;&#12377;&#12290;</p>
+<p>AI&#12395;&#23550;&#12377;&#12427;&#12469;&#12452;&#12496;&#12540;&#25915;&#25731;&#12363;&#12425;&#35069;&#21697;&#12434;&#20445;&#35703;&#12377;&#12427;&#38450;&#24481;&#25163;&#27861;&#12398;&#12495;&#12531;&#12474;&#12458;&#12531;&#12434;&#12475;&#12461;&#12517;&#12450;AI&#30740;&#31350;&#25152;&#12391;&#12399;&#25552;&#20379;&#12375;&#12390;&#12356;&#12414;&#12377;&#12290;&#35443;&#32048;&#12399;&#19979;&#35352;&#12424;&#12426;&#12372;&#35239;&#12367;&#12384;&#12373;&#12356;&#12290;</p>
+<p><span style="font-size: 12pt;">&#9660;&#21442;&#32771;&#35352;&#20107;&#65306;&#12475;&#12461;&#12517;&#12450;AI&#38283;&#30330;&#12488;&#12524;&#12540;&#12491;&#12531;&#12464;<br></span><span style="font-size: 12pt;"><div class="linkcard"><div class="lkc-external-wrap"><a class="lkc-link no_icon" href="https://jpsec.ai"><div class="lkc-card"><div class="lkc-info"><span class="lkc-domain"><img class="lkc-favicon" src="https://www.google.com/s2/favicons?domain=jpsec.ai" alt="" width="16" height="16"/>&nbsp;jpsec.ai</span></div><div class="lkc-content"><span class="lkc-thumbnail"><img class="lkc-thumbnail-img" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fjpsec.ai?w=100" alt=""/></span><div class="lkc-title"><span class="lkc-title-text">&#12475;&#12461;&#12517;&#12450;AI&#38283;&#30330;&#12488;&#12524;&#12540;&#12491;&#12531;&#12464;</span></div><div class="lkc-url"><cite>https://jpsec.ai</cite></div><div class="lkc-excerpt">&#26085;&#26412;&#12488;&#12483;&#12503;&#12524;&#12505;&#12523;&#12398;AI&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#30740;&#31350;&#12481;&#12540;&#12512;&#12395;&#12424;&#12427;AI&#12434;&#12469;&#12452;&#12496;&#12540;&#25915;&#25731;&#12363;&#12425;&#23432;&#12427;&#25216;&#34899;&#12434;&#36523;&#12395;&#30528;&#12369;&#12427;2&#26085;&#38291;&#12398;&#12495;&#12531;&#12474;&#12458;&#12531;&#12488;&#12524;&#12540;&#12491;&#12531;&#12464;&#12391;&#12377;&#12290;</div></div><div class="clear"></div></div></a></div></div></span></p>
+<p>&#27425;&#22238;&#12399;&#12289;&#31532;3&#22238;&#12300;AI&#12434;&#20055;&#12387;&#21462;&#12427;&#25915;&#25731; &ndash; &#23398;&#32722;&#12487;&#12540;&#12479;&#27738;&#26579; -&#12301;&#12395;&#12388;&#12356;&#12390;&#25237;&#31295;&#12356;&#12383;&#12375;&#12414;&#12377;&#12290;</p>
+<div class="supplement ">&#26666;&#24335;&#20250;&#31038;ChillStack&#65306;&#12300;&#19990;&#30028;&#20013;&#12398;&#20154;&#12364;&#23433;&#24515;&#12375;&#12390;&#12289;&#26032;&#12375;&#12356;&#12469;&#12540;&#12499;&#12473;&#12539;&#25216;&#34899;&#12434;&#20316;&#12426;&#12289;&#25552;&#20379;&#12375;&#12289;&#21033;&#29992;&#12391;&#12365;&#12427;&#31038;&#20250;&#12301;&#12434;&#23455;&#29694;&#12377;&#12427;&#12383;&#12417;&#12395;&#19990;&#30028;&#26368;&#39640;&#12398;AI&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#25216;&#34899;&#12434;&#38283;&#30330;&#12539;&#25552;&#20379;&#12375;&#12390;&#12356;&#12427;&#12290;AI&#12434;&#29992;&#12356;&#12383;&#19981;&#27491;&#12518;&#12540;&#12470;&#26908;&#30693;&#12471;&#12473;&#12486;&#12512;&#12398;&#38283;&#30330;&#12539;&#25552;&#20379;&#12434;&#12399;&#12376;&#12417;&#12289;Web&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12398;&#33030;&#24369;&#35386;&#26029;&#12420;&#12289;AI&#12434;&#23432;&#12427;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#25216;&#34899;&#12434;&#30740;&#31350;&#12539;&#38283;&#30330;&#12375;&#12390;&#12356;&#12427;&#12290;</div>
+<div class="supplement ">&#19977;&#20117;&#29289;&#29987;&#12475;&#12461;&#12517;&#12450;&#12487;&#12451;&#12524;&#12463;&#12471;&#12519;&#12531;&#26666;&#24335;&#20250;&#31038;&#65306;&#12469;&#12452;&#12496;&#12540;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#23554;&#38272;&#20225;&#26989;&#12391;&#12354;&#12427;&#12290;&#12506;&#12493;&#12488;&#12524;&#12540;&#12471;&#12519;&#12531;&#12486;&#12473;&#12488;/TLPT/&#12524;&#12483;&#12489;&#12481;&#12540;&#12512;&#12289;Web&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12420;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#33030;&#24369;&#24615;&#35386;&#26029;&#31561;&#12398;&#21508;&#31278;&#35386;&#26029;&#12469;&#12540;&#12499;&#12473;&#12289;&#12510;&#12523;&#12454;&#12455;&#12450;&#35299;&#26512;&#12289;&#12450;&#12489;&#12496;&#12531;&#12473;&#12488;SOC&#12289;Threat Hunting&#12469;&#12540;&#12499;&#12473;&#31561;&#12398;&#39640;&#24230;&#12394;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#25216;&#34899;&#12469;&#12540;&#12499;&#12473;&#12362;&#12424;&#12403;&#12467;&#12531;&#12469;&#12523;&#12486;&#12451;&#12531;&#12464;&#12469;&#12540;&#12499;&#12473;&#31561;&#12434;&#25552;&#20379;&#12375;&#12390;&#12356;&#12427;&#12290;</div>
+<div class="saboxplugin-wrap" itemtype="http://schema.org/Person" itemscope itemprop="author"><div class="saboxplugin-gravatar"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://ainow.ai/wp-content/uploads/2020/01/dip_yudo-150x150.jpg" width="100" height="100" alt="&#12422;&#12540;&#12393;&#12540;" class="avatar avatar-100 wp-user-avatar wp-user-avatar-100 alignnone photo"/></div><div class="saboxplugin-authorname"><a href="https://ainow.ai/author/yudo-nakamura/" class="vcard author" rel="author" itemprop="url"><span class="fn" itemprop="name">&#12422;&#12540;&#12393;&#12540;</span></a></div><div class="saboxplugin-desc"><div itemprop="description"><p>&#39378;&#28580;&#22823;&#23398;&#20175;&#25945;&#23398;&#37096;&#12395;&#25152;&#23646;&#12290;YouTube&#12392;K-POP&#12395;&#12495;&#12510;&#12387;&#12390;&#12356;&#12414;&#12377;&#12290;<br>
+AI&#12364;&#12371;&#12428;&#12363;&#12425;&#23447;&#25945;&#12392;&#12393;&#12398;&#12424;&#12358;&#12395;&#38306;&#12431;&#12426;&#12289;&#20175;&#25945;&#24466;&#12398;&#29983;&#27963;&#12395;&#24433;&#38911;&#12377;&#12427;&#12398;&#12363;&#12395;&#12388;&#12356;&#12390;&#33288;&#21619;&#12364;&#12354;&#12426;&#12414;&#12377;&#12290;</p>
+</div></div><div class="clearfix"></div></div>  </div>
+
+      <div id="addbanner-contentfoot">
+    <div id="text-34" class="widget widget_text">			<div class="textwidget"><a href="https://form.run/@ainowmagazine3" target="_blank"><img src="https://ainow.ai/wp-content/uploads/2017/05/20170529_738_01.png"></a></div>
+		</div>  </div>
+    <div class="button-area">
+  <ul>
+    <!--Twitter-->
+    <li class="twitter">
+      <a href="https://twitter.com/intent/tweet?text=%E3%80%90AI%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E8%B6%85%E5%85%A5%E9%96%80%E3%80%91%E7%AC%AC2%E8%A9%B1+%26%238211%3B+AI%E3%82%92%E9%A8%99%E3%81%99%E6%94%BB%E6%92%83+%26%238211%3B+%E6%95%B5%E5%AF%BE%E7%9A%84%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB&amp;url=https%3A%2F%2Fainow.ai%2F2020%2F08%2F24%2F227047%2F"
+      target="_blank" title="Twitterで共有">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <!--FaceBook-->
+    <li class="facebook">
+      <a href="https://www.facebook.com/sharer.php?src=bm&u=https%3A%2F%2Fainow.ai%2F2020%2F08%2F24%2F227047%2F&t=%E3%80%90AI%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E8%B6%85%E5%85%A5%E9%96%80%E3%80%91%E7%AC%AC2%E8%A9%B1+%26%238211%3B+AI%E3%82%92%E9%A8%99%E3%81%99%E6%94%BB%E6%92%83+%26%238211%3B+%E6%95%B5%E5%AF%BE%E7%9A%84%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB"
+      target="_blank" title="Facebookで共有">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <!--はてなブックマーク-->
+    <li class="hatena">
+      <a href="https://b.hatena.ne.jp/add?mode=confirm&amp;url=https%3A%2F%2Fainow.ai%2F2020%2F08%2F24%2F227047%2F&amp;title=%E3%80%90AI%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E8%B6%85%E5%85%A5%E9%96%80%E3%80%91%E7%AC%AC2%E8%A9%B1+%26%238211%3B+AI%E3%82%92%E9%A8%99%E3%81%99%E6%94%BB%E6%92%83+%26%238211%3B+%E6%95%B5%E5%AF%BE%E7%9A%84%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB"
+      target="_blank" title="はてなブックマークに追加">
+        <i class="fa fa-hatena"></i>
+      </a>
+    </li>
+    <!--Poket-->
+    <li class="rss">
+      <a href="https://feedly.com/i/subscription/feed%2Fhttp%3A%2F%2Fainow.ai%2Ffeed%2F"
+      target="_blank" title="RSS購読">
+        <i class="fas fa-rss"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+  <div class="article_area_data">
+    </div>
+
+
+<!-- コメント機能タグ -->
+<div id="ulCommentWidget" style="clear:both;"></div>
+<script>
+var _ul_comment_config = _ul_comment_config||{};
+_ul_comment_config['id'] = 'CM-5i3ih5ry';
+_ul_comment_config['article_id'] = '227047';
+_ul_comment_config['published_at'] = '';
+_ul_comment_config['number_of_comments'] = 5;
+_ul_comment_config['use_pagination'] = true;
+
+(function (c, n, s) {if (c[n] === void 0) {c['ULObject'] = n;
+c[n] = c[n] || function () {(c[n].q = c[n].q || []).push(arguments)};
+c[n].l = 1 * new Date();var e = document.createElement('script');e.async = 1;
+e.src = s + "/comment.js";var t = document.getElementsByTagName('script')[0];
+t.parentNode.insertBefore(e, t);}})
+(window, 'ul_comment_widget', 'https://cm-widget.nakanohito.jp/cm');
+ul_comment_widget('init', _ul_comment_config);
+</script>
+<!-- コメント機能タグ -->
+
+
+<div class="btn-wrap">
+  <a href="/">トップへ</a>
+</div>
+
+<div class="cta-wrap">
+
+<div id="wpp-7" class="ctawidget popular-posts">
+人気の記事（週間）
+<!-- WordPress Popular Posts -->
+
+<ul class="wpp-list wpp-list-with-thumbnails">
+<li>
+<a href="https://ainow.ai/2020/08/21/227359/" title="受講料の70%が助成！Pythonに特化したAI講座「Aidemy Premium Plan」が 経産省、厚労省の認定講座に" target="_self"><img width="728" height="382" src="https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n.png" class="wpp-thumbnail wpp_featured_stock wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n.png 1200w, https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-150x79.png 150w, https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-300x158.png 300w, https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-768x403.png 768w, https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-572x300.png 572w" sizes="(max-width: 728px) 100vw, 728px" /></a>
+<a href="https://ainow.ai/2020/08/21/227359/" title="受講料の70%が助成！Pythonに特化したAI講座「Aidemy Premium Plan」が 経産省、厚労省の認定講座に" class="wpp-post-title" target="_self">受講料の70%が助成！Pythonに特化したAI講座「Aidemy Premium Plan」が 経産省、厚労省の認定講座に</a>
+</li>
+<li>
+<a href="https://ainow.ai/2020/03/02/183280/" title="【保存版】オープンデータ・データセット100選  -膨大なデータを活用しよう！" target="_self"><img width="728" height="382" src="https://ainow.ai/wp-content/uploads/2020/02/a11b4bb3ba448d1fa402ac3dc62cc91f.png" class="wpp-thumbnail wpp_featured_stock wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/02/a11b4bb3ba448d1fa402ac3dc62cc91f.png 1201w, https://ainow.ai/wp-content/uploads/2020/02/a11b4bb3ba448d1fa402ac3dc62cc91f-150x79.png 150w, https://ainow.ai/wp-content/uploads/2020/02/a11b4bb3ba448d1fa402ac3dc62cc91f-300x157.png 300w, https://ainow.ai/wp-content/uploads/2020/02/a11b4bb3ba448d1fa402ac3dc62cc91f-768x403.png 768w" sizes="(max-width: 728px) 100vw, 728px" /></a>
+<a href="https://ainow.ai/2020/03/02/183280/" title="【保存版】オープンデータ・データセット100選  -膨大なデータを活用しよう！" class="wpp-post-title" target="_self">【保存版】オープンデータ・データセット100選  -膨大なデータを活用しよう！</a>
+</li>
+<li>
+<a href="https://ainow.ai/2020/08/22/227464/" title="1位は点字自動翻訳システム！評価額は5億円！「DCON2020」速報" target="_self"><img width="728" height="410" src="https://ainow.ai/wp-content/uploads/2020/08/DSC07794.jpg" class="wpp-thumbnail wpp_featured_stock wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/08/DSC07794.jpg 1616w, https://ainow.ai/wp-content/uploads/2020/08/DSC07794-150x84.jpg 150w, https://ainow.ai/wp-content/uploads/2020/08/DSC07794-300x169.jpg 300w, https://ainow.ai/wp-content/uploads/2020/08/DSC07794-768x432.jpg 768w" sizes="(max-width: 728px) 100vw, 728px" /></a>
+<a href="https://ainow.ai/2020/08/22/227464/" title="1位は点字自動翻訳システム！評価額は5億円！「DCON2020」速報" class="wpp-post-title" target="_self">1位は点字自動翻訳システム！評価額は5億円！「DCON2020」速報</a>
+</li>
+<li>
+<a href="https://ainow.ai/2019/11/26/180809/" title="機械学習をどこよりもわかりやすく解説！　教師ありなし学習・強化学習だけでなく5つのアルゴリズムも完全理解！" target="_self"><img width="728" height="382" src="https://ainow.ai/wp-content/uploads/2019/11/a315aff0942ff8e9549dba594485535c-1.png" class="wpp-thumbnail wpp_featured_stock wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2019/11/a315aff0942ff8e9549dba594485535c-1.png 1200w, https://ainow.ai/wp-content/uploads/2019/11/a315aff0942ff8e9549dba594485535c-1-150x79.png 150w, https://ainow.ai/wp-content/uploads/2019/11/a315aff0942ff8e9549dba594485535c-1-300x158.png 300w, https://ainow.ai/wp-content/uploads/2019/11/a315aff0942ff8e9549dba594485535c-1-768x403.png 768w" sizes="(max-width: 728px) 100vw, 728px" /></a>
+<a href="https://ainow.ai/2019/11/26/180809/" title="機械学習をどこよりもわかりやすく解説！　教師ありなし学習・強化学習だけでなく5つのアルゴリズムも完全理解！" class="wpp-post-title" target="_self">機械学習をどこよりもわかりやすく解説！　教師ありなし学習・強化学習だけでなく5つのアルゴリズムも完全理解！</a>
+</li>
+<li>
+<a href="https://ainow.ai/2018/11/14/151000/" title="１番構ってくれるLINEチャットボットはどれ！？ 実際にチャットボットに甘えてみた！" target="_self"><img width="728" height="382" src="https://ainow.ai/wp-content/uploads/2018/11/ae46b1f460ee46f789c27b264a6cb421-1-1920x1008.jpg" class="wpp-thumbnail wpp_featured_stock wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2018/11/ae46b1f460ee46f789c27b264a6cb421-1-1920x1008.jpg 1920w, https://ainow.ai/wp-content/uploads/2018/11/ae46b1f460ee46f789c27b264a6cb421-1-150x79.jpg 150w, https://ainow.ai/wp-content/uploads/2018/11/ae46b1f460ee46f789c27b264a6cb421-1-300x158.jpg 300w, https://ainow.ai/wp-content/uploads/2018/11/ae46b1f460ee46f789c27b264a6cb421-1-768x403.jpg 768w" sizes="(max-width: 728px) 100vw, 728px" /></a>
+<a href="https://ainow.ai/2018/11/14/151000/" title="１番構ってくれるLINEチャットボットはどれ！？ 実際にチャットボットに甘えてみた！" class="wpp-post-title" target="_self">１番構ってくれるLINEチャットボットはどれ！？ 実際にチャットボットに甘えてみた！</a>
+</li>
+<li>
+<a href="https://ainow.ai/2020/08/17/227241/" title="【無料・600名】課題解決を通してAIの社会実装スキルを学ぶ無料のプログラム「AI Quest」が募集開始" target="_self"><img width="728" height="382" src="https://ainow.ai/wp-content/uploads/2020/08/aiquest.pog_.png" class="wpp-thumbnail wpp_featured_stock wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/08/aiquest.pog_.png 1200w, https://ainow.ai/wp-content/uploads/2020/08/aiquest.pog_-150x79.png 150w, https://ainow.ai/wp-content/uploads/2020/08/aiquest.pog_-300x158.png 300w, https://ainow.ai/wp-content/uploads/2020/08/aiquest.pog_-768x403.png 768w, https://ainow.ai/wp-content/uploads/2020/08/aiquest.pog_-572x300.png 572w" sizes="(max-width: 728px) 100vw, 728px" /></a>
+<a href="https://ainow.ai/2020/08/17/227241/" title="【無料・600名】課題解決を通してAIの社会実装スキルを学ぶ無料のプログラム「AI Quest」が募集開始" class="wpp-post-title" target="_self">【無料・600名】課題解決を通してAIの社会実装スキルを学ぶ無料のプログラム「AI Quest」が募集開始</a>
+</li>
+</ul>
+
+</div>
+<div id="text-5" class="ctawidget widget_text">			<div class="textwidget"><div class="formrun-box">
+  <div class="formrun-title">
+    <img src="https://ainow.ai/wp-content/themes/ainow/img/sp_logo.png" alt="">
+    <h2>無料メールマガジン登録</h3>
+    <p>週1回、注目のAIニュースやイベント情報を<br>
+    編集部がピックアップしてお届けしています。
+    </p>
+  </div>
+<div class="formrun-form">
+<form class="formrun" action="https://form.run/api/v1/r/Y2sXjU7HkmAvYx9dfwFs" method="post" target="_blank">
+<div class="formrun-content">
+<label>お名前</label>
+<input name="_field_2" type="text" data-formrun-type="name" data-formrun-required></div>
+<div class="formrun-content">
+<label>メールアドレス</label>
+<input name="_field_1" type="text" data-formrun-type="email" data-formrun-required>
+</div>
+<div class="formrun-content">
+<label>職業<span>任意</span></label>
+<select class="form-control" name="_field_6" data-formrun-class-if-error="form-control-danger" data-formrun-class-if-success="form-control-success" class="form-control"><option value="">選択してください</option>
+<option>
+      会社員
+    </option><option>
+      会社役員
+    </option><option>
+      公務員
+    </option><option>
+      自営業
+    </option><option>
+      主夫/主婦
+    </option><option>
+      アルバイト
+    </option><option>
+      学生
+    </option><option>
+      その他
+    </option>
+</select>
+</div>
+<div class="formrun-content">
+<label>職種<span>任意</span></label>
+<select class="form-control" name="_field_3" data-formrun-class-if-error="form-control-danger" data-formrun-class-if-success="form-control-success" class="form-control"><option value="">選択してください</option>
+    <option>Webエンジニア</option>
+    <option>モバイルエンジニア</option>
+    <option>インフラエンジニア</option>
+    <option>その他エンジニア</option>
+    <option>データアナリスト/データサイエンティスト
+    </option><option>UI/UXデザイナー
+    </option><option>グラフィックデザイナー
+    </option><option>その他デザイナー
+    </option><option>ディレクター
+    </option><option>セールス
+    </option><option>マーケティング
+    </option><option>ライター
+    </option><option>プランナー
+    </option><option>その他の職種
+    </option>
+</select>
+</div>
+<div class="formrun-content">
+<p>​
+<a href="https://ainow.ai/%E3%80%90%E5%80%8B%E4%BA%BA%E6%83%85%E5%A0%B1%E3%81%AE%E5%8F%96%E6%89%B1%E3%81%84%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6%E3%80%91/" target="blank">こちら</a>の規約にご同意のうえチェックしてください。</p>
+<div class="formrun-check-content">
+  <span>規約に同意する<input name="_field_4" type="checkbox" data-formrun-required></span>
+</div>
+<div class="formrun-button-content">
+  <button class="formrun-submit-button" type="submit" data-formrun-error-text="未入力の項目があります" data-formrun-submitting-text="送信完了✓">同意して送信する</button></p>
+</div>
+</div>
+</form>​
+</div>
+</div>
+<style>
+.formrun-box{
+  background: #FFF;
+  padding: 20px;
+  font-size: 0;
+  box-shadow: 0 10px 50px 0 rgba(22,22,22,0.1);
+}
+.formrun-title {
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+  text-align: left;
+  padding: 100px 20px 0;
+}
+.formrun-title img {
+  width: 80%;
+}
+.formrun-title h2 {
+  font-size: 22px;
+  padding: 30px 0 0;
+}
+.formrun-title p {
+  font-size: 12px;
+  padding: 20px 0 0;
+}
+.formrun-form {
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+}
+.formrun-content {
+  text-align: left;
+  margin: 14px auto;
+  max-width: 320px;
+}
+.formrun-content label {
+  font-size: 14px;
+  font-weight: bold;
+}
+.formrun-content label span {
+  font-size: 10px;
+  color: #999;
+  margin-left: 6px;
+}
+.formrun-content input {
+  font-size: 14px;
+  height: 34px;
+  background: #ECECEC;
+  border: none;
+  width: 100%;
+}
+.formrun-content select {
+  font-size: 14px;
+  height: 34px;
+  background: #ECECEC;
+  border: none;
+  width: 100%;
+}
+.formrun-content p {
+  font-size: 12px;
+  margin: 0 10px;
+}
+.formrun-check-content {
+  margin: 10px;
+  text-align: center;
+}
+.formrun-check-content span {
+  font-size: 12px;
+}
+.formrun-check-content span input {
+  height: auto;
+  width: auto;
+  border: 2px solid #222;
+  margin: 4px;
+}
+.formrun-button-content {
+  text-align: center;
+  margin-top: 14px 0;
+}
+.formrun-submit-button {
+  background: #5985C1;
+  font-size: 14px;
+  color: #FFF;
+  width: 80%;
+}
+@media (max-width: 700px) {
+  .formrun-box {
+    padding: 30px 20px;
+  }
+  .formrun-title {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    padding: 20px 0 10px;
+  }
+  .formrun-title img {
+    width: 60%;
+  }
+  .formrun-form {
+    display: inline-block;
+    width: 100%;
+  }
+}
+</style></div>
+		</div></div>
+
+  </div>
+  <div id="recommend_article_area">
+    <h1>あなたにおすすめの記事</h1>
+              <article class="recommend_article">
+        <div class="recommend_article_thum">
+        <img width="486" height="290" src="https://ainow.ai/wp-content/uploads/2019/07/popular_tweet-486x290.png" class="attachment-home-thum size-home-thum wp-post-image" alt="" />      </div>
+          <h2>先週のAI関連人気ツイートTOP20！【2020/08/24更新】</h2>
+          <span class="article_tag"><a href="/tag/pickup2">#pickup2</a></span>          <span class="article_date">2020.08.25</span>
+        <a class="article_link" href="https://ainow.ai/2020/08/25/227471/"></a>
+      </article>
+          <article class="recommend_article">
+        <div class="recommend_article_thum">
+        <img width="572" height="300" src="https://ainow.ai/wp-content/uploads/2020/08/unnamed-3-572x300.png" class="attachment-home-thum size-home-thum wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/08/unnamed-3-572x300.png 572w, https://ainow.ai/wp-content/uploads/2020/08/unnamed-3-150x79.png 150w, https://ainow.ai/wp-content/uploads/2020/08/unnamed-3-300x158.png 300w, https://ainow.ai/wp-content/uploads/2020/08/unnamed-3.png 714w" sizes="(max-width: 572px) 100vw, 572px" />      </div>
+          <h2>FRONTEOが10月27日にオンラインカンファレンスを開催 ー東大 大澤氏、鳥海氏が登壇</h2>
+                    <span class="article_date">2020.08.24</span>
+        <a class="article_link" href="https://ainow.ai/2020/08/24/227514/"></a>
+      </article>
+          <article class="recommend_article">
+        <div class="recommend_article_thum">
+        <img width="572" height="300" src="https://ainow.ai/wp-content/uploads/2020/08/ae46b1f460ee46f789c27b264a6cb421-3-572x300.jpg" class="attachment-home-thum size-home-thum wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/08/ae46b1f460ee46f789c27b264a6cb421-3-572x300.jpg 572w, https://ainow.ai/wp-content/uploads/2020/08/ae46b1f460ee46f789c27b264a6cb421-3-150x79.jpg 150w, https://ainow.ai/wp-content/uploads/2020/08/ae46b1f460ee46f789c27b264a6cb421-3-300x158.jpg 300w, https://ainow.ai/wp-content/uploads/2020/08/ae46b1f460ee46f789c27b264a6cb421-3-768x403.jpg 768w, https://ainow.ai/wp-content/uploads/2020/08/ae46b1f460ee46f789c27b264a6cb421-3.jpg 1200w" sizes="(max-width: 572px) 100vw, 572px" />      </div>
+          <h2>Telexistenceの技術顧問に松尾豊氏が就任 ー生活領域に近い場所でロボットを普及</h2>
+          <span class="article_tag"><a href="/tag/pickup2">#pickup2</a></span>          <span class="article_date">2020.08.24</span>
+        <a class="article_link" href="https://ainow.ai/2020/08/24/227475/"></a>
+      </article>
+          <article class="recommend_article">
+        <div class="recommend_article_thum">
+        <img width="572" height="300" src="https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-572x300.jpg" class="attachment-home-thum size-home-thum wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-572x300.jpg 572w, https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-150x79.jpg 150w, https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-300x158.jpg 300w, https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-768x403.jpg 768w, https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a.jpg 1200w" sizes="(max-width: 572px) 100vw, 572px" />      </div>
+          <h2>【AIセキュリティ超入門】第2話 &#8211; AIを騙す攻撃 &#8211; 敵対的サンプル</h2>
+                    <span class="article_date">2020.08.24</span>
+        <a class="article_link" href="https://ainow.ai/2020/08/24/227047/"></a>
+      </article>
+          <article class="recommend_article">
+        <div class="recommend_article_thum">
+        <img width="572" height="300" src="https://ainow.ai/wp-content/uploads/2020/08/DSC07794-572x300.jpg" class="attachment-home-thum size-home-thum wp-post-image" alt="" />      </div>
+          <h2>1位は点字自動翻訳システム！評価額は5億円！「DCON2020」速報</h2>
+          <span class="article_tag"><a href="/tag/jdla">#JDLA</a></span><span class="article_tag"><a href="/tag/pickup2">#pickup2</a></span>          <span class="article_date">2020.08.22</span>
+        <a class="article_link" href="https://ainow.ai/2020/08/22/227464/"></a>
+      </article>
+          <article class="recommend_article">
+        <div class="recommend_article_thum">
+        <img width="572" height="300" src="https://ainow.ai/wp-content/uploads/2020/08/be1dd2d1e3f538268044a54bbd1a3076-572x300.jpg" class="attachment-home-thum size-home-thum wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/08/be1dd2d1e3f538268044a54bbd1a3076-572x300.jpg 572w, https://ainow.ai/wp-content/uploads/2020/08/be1dd2d1e3f538268044a54bbd1a3076-150x79.jpg 150w, https://ainow.ai/wp-content/uploads/2020/08/be1dd2d1e3f538268044a54bbd1a3076-300x158.jpg 300w, https://ainow.ai/wp-content/uploads/2020/08/be1dd2d1e3f538268044a54bbd1a3076-768x403.jpg 768w, https://ainow.ai/wp-content/uploads/2020/08/be1dd2d1e3f538268044a54bbd1a3076.jpg 1200w" sizes="(max-width: 572px) 100vw, 572px" />      </div>
+          <h2>ディープラーニングの知識を問うG検定とは！？その他関連の検定まで徹底解説</h2>
+          <span class="article_tag"><a href="/tag/ainoweditor">#AINOW編集部</a></span><span class="article_tag"><a href="/tag/jdla">#JDLA</a></span><span class="article_tag"><a href="/tag/deep-learning">#ディープラーニング</a></span><span class="article_tag"><a href="/tag/summary">#まとめ系</a></span><span class="article_tag"><a href="/tag/deeplearning">#深層学習</a></span><span class="article_tag"><a href="/tag/society">#社会</a></span><span class="article_tag"><a href="/tag/machine-learning">#統計的機械学習</a></span>          <span class="article_date">2020.08.21</span>
+        <a class="article_link" href="https://ainow.ai/2020/08/21/227422/"></a>
+      </article>
+          <article class="recommend_article">
+        <div class="recommend_article_thum">
+        <img width="572" height="300" src="https://ainow.ai/wp-content/uploads/2020/08/4c85c234076325c638e2c305400f29d6-1-572x300.jpg" class="attachment-home-thum size-home-thum wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/08/4c85c234076325c638e2c305400f29d6-1-572x300.jpg 572w, https://ainow.ai/wp-content/uploads/2020/08/4c85c234076325c638e2c305400f29d6-1-150x79.jpg 150w, https://ainow.ai/wp-content/uploads/2020/08/4c85c234076325c638e2c305400f29d6-1-300x158.jpg 300w, https://ainow.ai/wp-content/uploads/2020/08/4c85c234076325c638e2c305400f29d6-1-768x403.jpg 768w, https://ainow.ai/wp-content/uploads/2020/08/4c85c234076325c638e2c305400f29d6-1.jpg 1200w" sizes="(max-width: 572px) 100vw, 572px" />      </div>
+          <h2>発作が起きる前に不整脈の発症予測をするAIの治験を実施へ-世界初の開発で従来の技術で見逃していた心房細動を発見</h2>
+          <span class="article_tag"><a href="/tag/pickup2">#pickup2</a></span>          <span class="article_date">2020.08.21</span>
+        <a class="article_link" href="https://ainow.ai/2020/08/21/227416/"></a>
+      </article>
+          <article class="recommend_article">
+        <div class="recommend_article_thum">
+        <img width="572" height="300" src="https://ainow.ai/wp-content/uploads/2020/08/c5c6928c4f9a3a8a6d7dedf5e4c674d3-572x300.png" class="attachment-home-thum size-home-thum wp-post-image" alt="" />      </div>
+          <h2>マイクロソフトから「りんな」が独立 ーrinna株式会社が設立</h2>
+          <span class="article_tag"><a href="/tag/pickup2">#pickup2</a></span>          <span class="article_date">2020.08.21</span>
+        <a class="article_link" href="https://ainow.ai/2020/08/21/227403/"></a>
+      </article>
+          <article class="recommend_article">
+        <div class="recommend_article_thum">
+        <img width="572" height="300" src="https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-572x300.png" class="attachment-home-thum size-home-thum wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-572x300.png 572w, https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-150x79.png 150w, https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-300x158.png 300w, https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-768x403.png 768w, https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n.png 1200w" sizes="(max-width: 572px) 100vw, 572px" />      </div>
+          <h2>受講料の70%が助成！Pythonに特化したAI講座「Aidemy Premium Plan」が 経産省、厚労省の認定講座に</h2>
+                    <span class="article_date">2020.08.21</span>
+        <a class="article_link" href="https://ainow.ai/2020/08/21/227359/"></a>
+      </article>
+          <article class="recommend_article">
+        <div class="recommend_article_thum">
+        <img width="572" height="300" src="https://ainow.ai/wp-content/uploads/2020/08/ae46b1f460ee46f789c27b264a6cb421-2-572x300.png" class="attachment-home-thum size-home-thum wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/08/ae46b1f460ee46f789c27b264a6cb421-2-572x300.png 572w, https://ainow.ai/wp-content/uploads/2020/08/ae46b1f460ee46f789c27b264a6cb421-2-150x79.png 150w, https://ainow.ai/wp-content/uploads/2020/08/ae46b1f460ee46f789c27b264a6cb421-2-300x158.png 300w, https://ainow.ai/wp-content/uploads/2020/08/ae46b1f460ee46f789c27b264a6cb421-2-768x403.png 768w, https://ainow.ai/wp-content/uploads/2020/08/ae46b1f460ee46f789c27b264a6cb421-2.png 1200w" sizes="(max-width: 572px) 100vw, 572px" />      </div>
+          <h2>現役高専生が起業！深層学習を利用した送電線点検システム</h2>
+          <span class="article_tag"><a href="/tag/jdla">#JDLA</a></span><span class="article_tag"><a href="/tag/pickup2">#pickup2</a></span>          <span class="article_date">2020.08.20</span>
+        <a class="article_link" href="https://ainow.ai/2020/08/20/227353/"></a>
+      </article>
+      </div>
+        <div id="sidebar">
+    
+<div id="wpp-6" class="widget popular-posts">
+<h4 class="widgettitle"><span>今日の人気記事</span></h4>
+<!-- WordPress Popular Posts -->
+
+<ul class="wpp-list wpp-list-with-thumbnails">
+<li>
+<a href="https://ainow.ai/2020/08/22/227464/" title="1位は点字自動翻訳システム！評価額は5億円！「DCON2020」速報" target="_self"><img width="300" height="169" src="https://ainow.ai/wp-content/uploads/2020/08/DSC07794-300x169.jpg" class="wpp-thumbnail wpp_featured_stock wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/08/DSC07794-300x169.jpg 300w, https://ainow.ai/wp-content/uploads/2020/08/DSC07794-150x84.jpg 150w, https://ainow.ai/wp-content/uploads/2020/08/DSC07794-768x432.jpg 768w" sizes="(max-width: 300px) 100vw, 300px" /></a>
+<a href="https://ainow.ai/2020/08/22/227464/" title="1位は点字自動翻訳システム！評価額は5億円！「DCON2020」速報" class="wpp-post-title" target="_self">1位は点字自動翻訳システム！評価額は5億円！「DCON2020」速報</a>
+</li>
+<li class="current">
+<a  title="【AIセキュリティ超入門】第2話 &#8211; AIを騙す攻撃 &#8211; 敵対的サンプル" target="_self"><img width="300" height="158" src="https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-300x158.jpg" class="wpp-thumbnail wpp_featured_stock wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-300x158.jpg 300w, https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-150x79.jpg 150w, https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-768x403.jpg 768w, https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a-572x300.jpg 572w, https://ainow.ai/wp-content/uploads/2020/08/f97c89648ae2ecde6e0787800ca9402a.jpg 1200w" sizes="(max-width: 300px) 100vw, 300px" /></a>
+<a  title="【AIセキュリティ超入門】第2話 &#8211; AIを騙す攻撃 &#8211; 敵対的サンプル" class="wpp-post-title" target="_self">【AIセキュリティ超入門】第2話 &#8211; AIを騙す攻撃 &#8211; 敵対的サンプル</a>
+</li>
+<li>
+<a href="https://ainow.ai/2020/02/01/182693/" title="AIによるメリット・デメリットは？人工知能の問題点と解決策も紹介" target="_self"><img width="300" height="158" src="https://ainow.ai/wp-content/uploads/2020/01/b99835a7c70f471ab887b0e007ad8a05-300x158.png" class="wpp-thumbnail wpp_featured_stock wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/01/b99835a7c70f471ab887b0e007ad8a05-300x158.png 300w, https://ainow.ai/wp-content/uploads/2020/01/b99835a7c70f471ab887b0e007ad8a05-150x79.png 150w, https://ainow.ai/wp-content/uploads/2020/01/b99835a7c70f471ab887b0e007ad8a05-768x403.png 768w" sizes="(max-width: 300px) 100vw, 300px" /></a>
+<a href="https://ainow.ai/2020/02/01/182693/" title="AIによるメリット・デメリットは？人工知能の問題点と解決策も紹介" class="wpp-post-title" target="_self">AIによるメリット・デメリットは？人工知能の問題点と解決策も紹介</a>
+</li>
+<li>
+<a href="https://ainow.ai/2020/08/21/227359/" title="受講料の70%が助成！Pythonに特化したAI講座「Aidemy Premium Plan」が 経産省、厚労省の認定講座に" target="_self"><img width="300" height="158" src="https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-300x158.png" class="wpp-thumbnail wpp_featured_stock wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-300x158.png 300w, https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-150x79.png 150w, https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-768x403.png 768w, https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n-572x300.png 572w, https://ainow.ai/wp-content/uploads/2020/08/117832977_672979229959424_5464833067939579448_n.png 1200w" sizes="(max-width: 300px) 100vw, 300px" /></a>
+<a href="https://ainow.ai/2020/08/21/227359/" title="受講料の70%が助成！Pythonに特化したAI講座「Aidemy Premium Plan」が 経産省、厚労省の認定講座に" class="wpp-post-title" target="_self">受講料の70%が助成！Pythonに特化したAI講座「Aidemy Premium Plan」が 経産省、厚労省の認定講座に</a>
+</li>
+<li>
+<a href="https://ainow.ai/2019/11/26/180809/" title="機械学習をどこよりもわかりやすく解説！　教師ありなし学習・強化学習だけでなく5つのアルゴリズムも完全理解！" target="_self"><img width="300" height="158" src="https://ainow.ai/wp-content/uploads/2019/11/a315aff0942ff8e9549dba594485535c-1-300x158.png" class="wpp-thumbnail wpp_featured_stock wp-post-image" alt="" srcset="https://ainow.ai/wp-content/uploads/2019/11/a315aff0942ff8e9549dba594485535c-1-300x158.png 300w, https://ainow.ai/wp-content/uploads/2019/11/a315aff0942ff8e9549dba594485535c-1-150x79.png 150w, https://ainow.ai/wp-content/uploads/2019/11/a315aff0942ff8e9549dba594485535c-1-768x403.png 768w, https://ainow.ai/wp-content/uploads/2019/11/a315aff0942ff8e9549dba594485535c-1.png 1200w" sizes="(max-width: 300px) 100vw, 300px" /></a>
+<a href="https://ainow.ai/2019/11/26/180809/" title="機械学習をどこよりもわかりやすく解説！　教師ありなし学習・強化学習だけでなく5つのアルゴリズムも完全理解！" class="wpp-post-title" target="_self">機械学習をどこよりもわかりやすく解説！　教師ありなし学習・強化学習だけでなく5つのアルゴリズムも完全理解！</a>
+</li>
+</ul>
+
+</div>
+<div id="text-28" class="widget widget_text">			<div class="textwidget"><a href="https://youtu.be/qgLQedsBz2s" target="_blank" rel="noopener noreferrer"><img src="https://ainow.ai/wp-content/uploads/2020/08/thumbnail30_TI.png"></a></div>
+		</div><div id="text-10" class="widget widget_text">			<div class="textwidget"><a href="https://form.run/@ainowmagazine3"><img src="https://ainow.ai/wp-content/uploads/2017/03/ainow_magazine_840x560_02a.png"></a></div>
+		</div>  </div>
+      </div>
+  </div>
+  </div>
+  <script type="text/javascript">
+  </script>
+  <!-- //contents -->
+</div>
+<!-- //wrapper -->
+<footer>
+  <div class="footer_wrapper">
+  <div class="footer_contents">
+    <div class="footer_logo">
+      <a href="/"><img src="https://ainow.ai/wp-content/themes/ainow/img/footer_logo.png" alt=""></a>
+    </div>
+    <ul>
+      <li><a href="https://twitter.com/AINOW_ai"><img class="footer_sns" src="https://ainow.ai/wp-content/themes/ainow/img/tw.png" alt=""></a></li>
+      <li><a href="https://www.facebook.com/dipainow/"><img class="footer_sns" src="https://ainow.ai/wp-content/themes/ainow/img/fb.png" alt=""></a></li>
+      <li><a class="footer_mail" href="https://form.run/@ainowmagazine3?cid=test01">メルマガ配信中  AIトレンドを見逃すな ▶︎ </a></li>
+    </ul>
+  </div>
+  <div id="footer_menu">
+    <ul id="menu-%e3%83%95%e3%83%83%e3%82%bf%e3%83%bc%e3%83%a1%e3%83%8b%e3%83%a5%e3%83%bc" class="menu"><li id="menu-item-2108" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2108"><a href="http://www.dip-net.co.jp/">会社概要</a></li>
+<li id="menu-item-170012" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-170012"><a href="https://www.wantedly.com/projects/186205">採用情報</a></li>
+<li id="menu-item-170013" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-170013"><a href="https://form.run/@ainow-contact">お問い合わせ</a></li>
+<li id="menu-item-2111" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2111"><a href="https://ainow.ai/intellectual-property-right/">知的財産権に関する考え方</a></li>
+<li id="menu-item-105750" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-105750"><a href="http://startuptimes.jp/">スタートアップタイムズ</a></li>
+</ul>      <span>©Copyright2020  AI専門ニュースメディア AINOW.All Rights Reserved.</span>
+  </div>
+</div>
+</footer>
+<script type="text/javascript">
+  $('a[target="_self"]').removeAttr('target');
+</script>
+</body>
+<style type="text/css">.saboxplugin-wrap{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;border:1px solid #eee;width:100%;clear:both;display:block;overflow:hidden;word-wrap:break-word;position:relative}.saboxplugin-wrap .saboxplugin-gravatar{float:left;padding:20px}.saboxplugin-wrap .saboxplugin-gravatar img{max-width:100px;height:auto;border-radius:0;}.saboxplugin-wrap .saboxplugin-authorname{font-size:18px;line-height:1;margin:20px 0 0 20px;display:block}.saboxplugin-wrap .saboxplugin-authorname a{text-decoration:none}.saboxplugin-wrap .saboxplugin-authorname a:focus{outline:0}.saboxplugin-wrap .saboxplugin-desc{display:block;margin:5px 20px}.saboxplugin-wrap .saboxplugin-desc a{text-decoration:underline}.saboxplugin-wrap .saboxplugin-desc p{margin:5px 0 12px}.saboxplugin-wrap .saboxplugin-web{margin:0 20px 15px;text-align:left}.saboxplugin-wrap .sab-web-position{text-align:right}.saboxplugin-wrap .saboxplugin-web a{color:#ccc;text-decoration:none}.saboxplugin-wrap .saboxplugin-socials{position:relative;display:block;background:#fcfcfc;padding:5px;border-top:1px solid #eee}.saboxplugin-wrap .saboxplugin-socials a svg{width:20px;height:20px}.saboxplugin-wrap .saboxplugin-socials a svg .st2{fill:#fff}.saboxplugin-wrap .saboxplugin-socials a svg .st1{fill:rgba(0,0,0,.3)}.saboxplugin-wrap .saboxplugin-socials a:hover{opacity:.8;-webkit-transition:opacity .4s;-moz-transition:opacity .4s;-o-transition:opacity .4s;transition:opacity .4s;box-shadow:none!important;-webkit-box-shadow:none!important}.saboxplugin-wrap .saboxplugin-socials .saboxplugin-icon-color{box-shadow:none;padding:0;border:0;-webkit-transition:opacity .4s;-moz-transition:opacity .4s;-o-transition:opacity .4s;transition:opacity .4s;display:inline-block;color:#fff;font-size:0;text-decoration:inherit;margin:5px;-webkit-border-radius:0;-moz-border-radius:0;-ms-border-radius:0;-o-border-radius:0;border-radius:0;overflow:hidden}.saboxplugin-wrap .saboxplugin-socials .saboxplugin-icon-grey{text-decoration:inherit;box-shadow:none;position:relative;display:-moz-inline-stack;display:inline-block;vertical-align:middle;zoom:1;margin:10px 5px;color:#444}.clearfix:after,.clearfix:before{content:' ';display:table;line-height:0;clear:both}.ie7 .clearfix{zoom:1}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-twitch{border-color:#38245c}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-addthis{border-color:#e91c00}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-behance{border-color:#003eb0}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-delicious{border-color:#06c}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-deviantart{border-color:#036824}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-digg{border-color:#00327c}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-dribbble{border-color:#ba1655}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-facebook{border-color:#1e2e4f}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-flickr{border-color:#003576}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-github{border-color:#264874}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-google{border-color:#0b51c5}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-googleplus{border-color:#96271a}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-html5{border-color:#902e13}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-instagram{border-color:#1630aa}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-linkedin{border-color:#00344f}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-pinterest{border-color:#5b040e}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-reddit{border-color:#992900}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-rss{border-color:#a43b0a}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-sharethis{border-color:#5d8420}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-skype{border-color:#00658a}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-soundcloud{border-color:#995200}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-spotify{border-color:#0f612c}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-stackoverflow{border-color:#a95009}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-steam{border-color:#006388}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-user_email{border-color:#b84e05}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-stumbleUpon{border-color:#9b280e}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-tumblr{border-color:#10151b}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-twitter{border-color:#0967a0}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-vimeo{border-color:#0d7091}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-windows{border-color:#003f71}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-wordpress{border-color:#0f3647}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-yahoo{border-color:#14002d}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-youtube{border-color:#900}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-xing{border-color:#000202}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-mixcloud{border-color:#2475a0}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-vk{border-color:#243549}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-medium{border-color:#00452c}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-quora{border-color:#420e00}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-meetup{border-color:#9b181c}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-goodreads{border-color:#000}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-snapchat{border-color:#999700}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-500px{border-color:#00557f}.saboxplugin-socials.sabox-colored .saboxplugin-icon-color .sab-mastodont{border-color:#185886}.sabox-plus-item{margin-bottom:20px}@media screen and (max-width:480px){.saboxplugin-wrap{text-align:center}.saboxplugin-wrap .saboxplugin-gravatar{float:none;padding:20px 0;text-align:center;margin:0 auto;display:block}.saboxplugin-wrap .saboxplugin-gravatar img{float:none;display:inline-block;display:-moz-inline-stack;vertical-align:middle;zoom:1}.saboxplugin-wrap .saboxplugin-desc{margin:0 10px 20px;text-align:center}.saboxplugin-wrap .saboxplugin-authorname{text-align:center;margin:10px 0 20px}}body .saboxplugin-authorname a,body .saboxplugin-authorname a:hover{box-shadow:none;-webkit-box-shadow:none}a.sab-profile-edit{font-size:16px!important;line-height:1!important}.sab-edit-settings a,a.sab-profile-edit{color:#0073aa!important;box-shadow:none!important;-webkit-box-shadow:none!important}.sab-edit-settings{margin-right:15px;position:absolute;right:0;z-index:2;bottom:10px;line-height:20px}.sab-edit-settings i{margin-left:5px}.saboxplugin-socials{line-height:1!important}.rtl .saboxplugin-wrap .saboxplugin-gravatar{float:right}.rtl .saboxplugin-wrap .saboxplugin-authorname{display:flex;align-items:center}.rtl .saboxplugin-wrap .saboxplugin-authorname .sab-profile-edit{margin-right:10px}.rtl .sab-edit-settings{right:auto;left:0}img.sab-custom-avatar{max-width:75px;}.saboxplugin-wrap .saboxplugin-gravatar img {-webkit-border-radius:50%;-moz-border-radius:50%;-ms-border-radius:50%;-o-border-radius:50%;border-radius:50%;}.saboxplugin-wrap .saboxplugin-socials .saboxplugin-icon-color {-webkit-border-radius:50%;-moz-border-radius:50%;-ms-border-radius:50%;-o-border-radius:50%;border-radius:50%;}.saboxplugin-wrap .saboxplugin-socials .saboxplugin-icon-color .st1 {display: none;}.saboxplugin-wrap .saboxplugin-socials .saboxplugin-icon-color svg {border-width: 1px;border-style:solid;border-radius:50%}.saboxplugin-wrap {margin-top:0px; margin-bottom:45px; padding: 0px 0px }.saboxplugin-wrap .saboxplugin-authorname {font-size:20px; line-height:27px;}.saboxplugin-wrap .saboxplugin-desc p, .saboxplugin-wrap .saboxplugin-desc {font-size:14px !important; line-height:21px !important;}.saboxplugin-wrap .saboxplugin-web {font-size:14px;}.saboxplugin-wrap .saboxplugin-socials a svg {width:36px;height:36px;}</style><script type='text/javascript'>
+/* <![CDATA[ */
+var celtispack_options = {"lazyload_embed":"0"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://ainow.ai/wp-content/plugins/celtispack/modules/unveil-lazyload/jquery.unveil_custom.js'></script>
+<script type='text/javascript' src='https://ainow.ai/wp-content/plugins/contact-form-7/includes/js/jquery.form.min.js'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var _wpcf7 = {"recaptcha":{"messages":{"empty":"Please verify that you are not a robot."}},"cached":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://ainow.ai/wp-content/plugins/contact-form-7/includes/js/scripts.js'></script>
+<script type='text/javascript' src='https://ainow.ai/wp-content/plugins/stock-ticker/assets/js/jquery.webticker.min.js'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var stockTickerJs = {"ajax_url":"https:\/\/ainow.ai\/wp-admin\/admin-ajax.php"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://ainow.ai/wp-content/plugins/stock-ticker/assets/js/jquery.stockticker.min.js'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var tocplus = {"smooth_scroll":"1","visibility_show":"\u8868\u793a","visibility_hide":"\u975e\u8868\u793a","width":"Auto"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://ainow.ai/wp-content/plugins/table-of-contents-plus/front.min.js'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var awsmJobsPublic = {"ajaxurl":"https:\/\/ainow.ai\/wp-admin\/admin-ajax.php","is_tax_archive":"","job_id":"0","wp_max_upload_size":"16777216","i18n":{"loading_text":"Loading...","form_error_msg":{"general":"Error in submitting your application. Please try again later!","file_validation":"The file you have selected is too large."}}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://ainow.ai/wp-content/plugins/wp-job-openings/assets/js/script.min.js'></script>
+<script type='text/javascript' src='https://ainow.ai/wp-includes/js/wp-embed.min.js'></script>
+
+    <!-- BEGIN: wpflow ga events array -->
+    <script>
+
+                jQuery(document).ready(function() {
+                    if(typeof scroll_events == 'undefined') {
+                        return;
+                    }
+                    scroll_events.bind_events( {
+                        universal: 1,
+                        gtm:0,
+                        gst:0,
+
+                        scroll_elements: [],
+                        click_elements: [{'select':'.wpp-post-title','category':'クリック','action':'記事タイトルクリック','label':'','bounce':'true','evalue':''}],
+                    });
+                });
+
+    </script>
+    <!-- END: wpflow ga events array --><!-- Celtispack version 2.0.0 Page generated info 175 queries 0.120 seconds --></html>
+
+<!-- Dynamic page generated in 0.132 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2020-08-25 09:10:53 -->
+
+<!-- super cache -->
